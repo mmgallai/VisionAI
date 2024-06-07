@@ -9,12 +9,9 @@ class FrameSettings:
         self.setup_frame()
 
     def setup_frame(self):
-        # Set the background color
         palette = self.widget.palette()
         palette.setColor(QPalette.Background, QColor(self.color))
         self.widget.setAutoFillBackground(True)
         self.widget.setPalette(palette)
-
-        # Create a grid layout
         self.layout = QGridLayout()
         self.widget.setLayout(self.layout)
