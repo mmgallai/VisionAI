@@ -1,15 +1,16 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtWidgets import QStyle
 from PyQt5.QtCore import Qt
 from view.FrameSettings import FrameSettings
 from view.IconButton import IconButton
 from view.UploadButton import UploadButton
+from view.DemoButton import DemoButton
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Main Frame")
+        self.setWindowTitle("Vision AI")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         
@@ -18,7 +19,7 @@ class MainWindow(QMainWindow):
         self.layout.addLayout(self.frame_settings.layout)
         
         self.create_icon_button()
-        self.create_upload_button()
+        self.create_upload_and_demo_buttons()
         self.showMaximized()
 
     def create_icon_button(self):
@@ -28,9 +29,16 @@ class MainWindow(QMainWindow):
         button = IconButton(QStyle.SP_DirIcon, label_text, button_size, icon_size, self.central_widget)
         self.frame_settings.layout.addWidget(button, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
 
-    def create_upload_button(self):
+    def create_upload_and_demo_buttons(self):
+        button_layout = QHBoxLayout()
+        
         upload_button = UploadButton(self.central_widget)
-        self.frame_settings.layout.addWidget(upload_button, 1, 0, alignment=Qt.AlignBottom | Qt.AlignHCenter)
+        demo_button = DemoButton(self.central_widget)
+        
+        button_layout.addWidget(upload_button)
+        button_layout.addWidget(demo_button)
+        
+        self.frame_settings.layout.addLayout(button_layout, 1, 0, alignment=Qt.AlignBottom | Qt.AlignHCenter)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
