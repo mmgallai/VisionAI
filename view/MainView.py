@@ -30,7 +30,7 @@ class MainWindow(QMainWindow):
 
     def create_upload_button(self):
         upload_button = UploadButton(self.central_widget)
-        self.frame_settings.layout.addWidget(upload_button, 1, 0, alignment=Qt.AlignBottom | Qt.AlignLeft)
+        self.frame_settings.layout.addWidget(upload_button, 1, 0, alignment=Qt.AlignBottom | Qt.AlignHCenter)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -3,31 +3,30 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
 class UploadButton(QWidget):
-    def __init__(self, l_margin=0, r_margin=0, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
         self.button = QPushButton("Upload Photos", self)
         self.button.clicked.connect(self.upload_photos)
         self.button.setStyleSheet(
-            f"""
-            QPushButton {{
-                margin-left: {l_margin}px;
-                margin-right: {r_margin}px;
-                border: 4px solid '#BC006C';
+            """
+            QPushButton {
+                border: 4px solid #3EB489; /* Mint color */
                 color: white;
                 font-family: 'shanti';
                 font-size: 36px;
                 border-radius: 25px;
-                padding: 15px 0;
-                margin-top: 20px;
-            }}
-            QPushButton:hover {{
-                background-color: '#BC006C';
-            }}
+                padding: 15px 30px; /* Increased padding for a larger button */
+                background-color: transparent; /* Transparent background */
+            }
+            QPushButton:hover {
+                background-color: #3EB489; /* Mint color on hover */
+            }
             """
         )
 
         self.layout = QVBoxLayout(self)
-        self.layout.addWidget(self.button)
+        self.layout.addWidget(self.button, alignment=Qt.AlignCenter)
+        self.setLayout(self.layout)
         
     def upload_photos(self):
         options = QFileDialog.Options()
@@ -35,6 +34,7 @@ class UploadButton(QWidget):
         if files:
             for file in files:
                 self.classify_photo(file)
+
 
     def classify_photo(self, file):
         # Placeholder for the photo classification method
