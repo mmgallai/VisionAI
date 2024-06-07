@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QPushButton, QFileDialog, QWidget, QVBoxLayout
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+from view.PopUpWindow import PopUpWindow
 
 class UploadButton(QWidget):
     def __init__(self, parent=None):
@@ -32,12 +33,9 @@ class UploadButton(QWidget):
         options = QFileDialog.Options()
         files, _ = QFileDialog.getOpenFileNames(self, "Upload Photos", "", "Image Files (*.png *.jpg *.jpeg *.bmp)", options=options)
         if files:
-            for file in files:
-                self.classify_photo(file)
+            self.show_popup()
 
 
-    def classify_photo(self, file):
-        # Placeholder for the photo classification method
-        print(f"Classifying photo: {file}")
-        # this should give the photos to the model to classify
-        # the model should be implemented in the model folder
+    def show_popup(self):
+        popup = PopUpWindow(self)
+        popup.exec_()
