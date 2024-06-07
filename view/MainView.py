@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         self.layout.addLayout(self.frame_settings.layout)
         
         self.create_icon_button()
-        self.create_upload_button()
+        self.create_select_method_button()
         self.showMaximized()
 
     def create_icon_button(self):
@@ -28,9 +28,9 @@ class MainWindow(QMainWindow):
         button = IconButton(QStyle.SP_DirIcon, label_text, button_size, icon_size, self.central_widget)
         self.frame_settings.layout.addWidget(button, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
 
-    def create_upload_button(self):
-        upload_button = UploadButton(self.central_widget)
-        self.frame_settings.layout.addWidget(upload_button, 1, 0, alignment=Qt.AlignBottom | Qt.AlignHCenter)
+    def create_select_method_button(self):
+        select_method_button = UploadButton(self.central_widget)
+        self.frame_settings.layout.addWidget(select_method_button, 1, 0, alignment=Qt.AlignBottom | Qt.AlignHCenter)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

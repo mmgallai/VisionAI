@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout
+from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QFileDialog
 from PyQt5.QtCore import Qt
 from controller.AI import AI
 from controller.Manual import Manual
@@ -62,11 +62,15 @@ class PopUpWindow(QDialog):
         self.manual_button.clicked.connect(self.use_manual)
 
     def use_vision_ai(self):
-        print("Vision AI selected")
-        ai_instance = AI()  # Instantiate the AI class from the controller folder
+        folder_path = QFileDialog.getExistingDirectory(self, "Select Folder")
+        if folder_path:
+            ai_instance = AI()
+            ai_instance.classify_folder(folder_path)
         self.accept()
 
     def use_manual(self):
-        print("Manual classification selected")
-        manual_instance = Manual()  # Instantiate the Manual class from the controller folder
+        image_paths, _ = QFileDialog.getOpenFileNames(self, "Select Images")
+        if image_paths:
+            manual_instance = Manual()
+            manual_instance.classify_images(image_paths)
         self.accept()

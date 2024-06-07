@@ -1,13 +1,12 @@
-from PyQt5.QtWidgets import QPushButton, QFileDialog, QWidget, QVBoxLayout
-from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QPushButton, QWidget, QVBoxLayout
 from PyQt5.QtCore import Qt
 from view.PopUpWindow import PopUpWindow
 
 class UploadButton(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.button = QPushButton("Upload Photos", self)
-        self.button.clicked.connect(self.upload_photos)
+        self.button = QPushButton("Select Method", self)
+        self.button.clicked.connect(self.show_popup)
         self.button.setStyleSheet(
             """
             QPushButton {
@@ -29,13 +28,6 @@ class UploadButton(QWidget):
         self.layout.addWidget(self.button, alignment=Qt.AlignCenter)
         self.setLayout(self.layout)
         
-    def upload_photos(self):
-        options = QFileDialog.Options()
-        files, _ = QFileDialog.getOpenFileNames(self, "Upload Photos", "", "Image Files (*.png *.jpg *.jpeg *.bmp)", options=options)
-        if files:
-            self.show_popup()
-
-
     def show_popup(self):
         popup = PopUpWindow(self)
         popup.exec_()
