@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QToolButton, QListWidget, QListWidgetItem, QLabel, QScrollArea, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QToolButton, QListWidget, QListWidgetItem, QLabel, QScrollArea, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QColor, QPalette, QPixmap
 from view.FrameSettings import FrameSettings
@@ -46,6 +46,9 @@ class MainWindow(QMainWindow):
 
         demo_button = self.create_icon_button("Web Demo", "demo_icon.png", self.open_demo)
         self.button_layout.addWidget(demo_button)
+
+        info_button = self.create_icon_button("Information", "info_icon.png", self.show_information)
+        self.button_layout.addWidget(info_button)
 
         self.button_layout.addStretch()
         self.frame_settings.layout.addLayout(self.button_layout, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
@@ -226,6 +229,17 @@ class MainWindow(QMainWindow):
     def open_demo(self):
         import webbrowser
         webbrowser.open("https://huggingface.co/spaces/jagruthh/cities_small")
+
+    def show_information(self):
+        QMessageBox.information(self, "Information", 
+            "This software allows you to organize images using Vision AI or manually.\n"
+            "Instructions:\n"
+            "1. Select 'Select Folder' to choose a directory.\n"
+            "2. Use 'Select Method' to choose Vision AI or Manual classification.\n"
+            "3. Navigate through folders using 'Back' and 'Forward' buttons.\n"
+            "4. View web demo for additional details.\n"
+            "5. The number of images in the current folder is displayed at the bottom right corner."
+        )
 
     def update_view(self, folder_path):
         self.update_history(folder_path)
