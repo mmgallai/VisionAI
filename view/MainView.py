@@ -35,13 +35,13 @@ class MainWindow(QMainWindow):
         self.forward_button = self.create_icon_button("Forward", "forward_icon.png", self.go_forward)
         self.button_layout.addWidget(self.forward_button)
 
-        select_folder_button = self.create_icon_button("Select Folder", "directories.png", self.select_folder)
+        select_folder_button = self.create_icon_button("Select Folder", "directories_icon.png", self.select_folder)
         self.button_layout.addWidget(select_folder_button)
 
         select_method_button = self.create_icon_button("Select Method", "method_icon.png", self.open_select_method)
         self.button_layout.addWidget(select_method_button)
 
-        demo_button = self.create_icon_button("Demo", "demo_icon.png", self.open_demo)
+        demo_button = self.create_icon_button("Web Demo", "demo_icon.png", self.open_demo)
         self.button_layout.addWidget(demo_button)
 
         self.button_layout.addStretch()
