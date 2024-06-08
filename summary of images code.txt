@@ -1,0 +1,28 @@
+   
+
+
+
+
+
+ def load_folders_and_images(self, directory, sort=False):
+        self.folder_list.clear()
+        
+        folders = []
+        images = []
+     	if sort:
+            # Sort folders by number of images (ascending)
+            folders.sort(key=lambda x: x[1])
+        
+        # Add folders and images to the QListWidget
+        for folder_name, image_count, folder_path in folders:
+            list_item = QListWidgetItem(f"{folder_name} ({image_count} images)")
+            list_item.setIcon(QIcon("icons/folder_icon.png"))  # Replace with path to your folder icon
+            list_item.setData(Qt.UserRole, folder_path)
+            self.folder_list.addItem(list_item)
+        
+        for image_path in images:
+            image_name = os.path.basename(image_path)
+            list_item = QListWidgetItem(image_name)
+            list_item.setIcon(QIcon("icons/image_icon.png"))  # Replace with path to your image icon
+            list_item.setData(Qt.UserRole, image_path)
+            self.folder_list.addItem(list_item)
