@@ -1,10 +1,15 @@
-import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QToolButton, QListWidget, QListWidgetItem, QLabel, QScrollArea, QFileDialog, QMessageBox
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QIcon, QColor, QPalette, QPixmap
+import sys
+
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QColor, QIcon, QPalette, QPixmap
+from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel,
+                             QListWidget, QListWidgetItem, QMainWindow,
+                             QMessageBox, QScrollArea, QToolButton,
+                             QVBoxLayout, QWidget)
 from view.FrameSettings import FrameSettings
 from view.PopUpWindow import PopUpWindow
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -38,7 +43,9 @@ class MainWindow(QMainWindow):
         self.add_button_with_label(self.button_layout, "Select Method", "icons/method_icon.png", self.open_select_method)
         self.add_button_with_label(self.button_layout, "Web Demo", "icons/demo_icon.png", self.open_demo)
         self.add_button_with_label(self.button_layout, "Information", "icons/info_icon.png", self.show_information)
+        self.sort_button = self.add_button_with_label(self.button_layout, "Sort", "icons/sort_icon.png", self.sort_albums)
 
+        
         self.button_layout.addStretch()
         self.frame_settings.layout.addLayout(self.button_layout, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
 
@@ -95,7 +102,7 @@ class MainWindow(QMainWindow):
     def create_image_count_label(self):
         self.image_count_label = QLabel(self)
         self.image_count_label.setAlignment(Qt.AlignRight)
-        self.image_count_label.setStyleSheet("color: white; font-size: 16px;")
+        self.image_count_label.setStyleSheet("color: white; fyont-size: 16px;")
         self.layout.addWidget(self.image_count_label)
         self.layout.setAlignment(self.image_count_label, Qt.AlignRight)
 
@@ -105,24 +112,39 @@ class MainWindow(QMainWindow):
         self.display_folder_contents(directory)
         self.update_path_label(directory)
 
-    def load_folders_and_images(self, directory):
+    def load_folders_and_images(self, directory, sort=False):
         self.folder_list.clear()
-        items = [f for f in os.listdir(directory)]
         
-        for item in items:
+        folders = []
+        images = []
+        
+        for item in os.listdir(directory):
             item_path = os.path.join(directory, item)
             if os.path.isdir(item_path):
-                list_item = QListWidgetItem(item)
-                list_item.setIcon(QIcon("icons/folder_icon.png"))  # Replace with path to your folder icon
-                list_item.setData(Qt.UserRole, item_path)
+                # Count number of images in the subfolder
+                image_count = len([f for f in os.listdir(item_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))])
+                folders.append((item, image_count, item_path))
             elif os.path.isfile(item_path) and item.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
-                list_item = QListWidgetItem(item)
-                list_item.setIcon(QIcon("icons/image_icon.png"))  # Replace with path to your image icon
-                list_item.setData(Qt.UserRole, item_path)
-            else:
-                continue
+                images.append(item_path)
 
+        if sort:
+            # Sort folders by number of images (ascending)
+            folders.sort(key=lambda x: x[1])
+        
+        # Add folders and images to the QListWidget
+        for folder_name, image_count, folder_path in folders:
+            list_item = QListWidgetItem(f"{folder_name} ({image_count} images)")
+            list_item.setIcon(QIcon("icons/folder_icon.png"))  # Replace with path to your folder icon
+            list_item.setData(Qt.UserRole, folder_path)
             self.folder_list.addItem(list_item)
+        
+        for image_path in images:
+            image_name = os.path.basename(image_path)
+            list_item = QListWidgetItem(image_name)
+            list_item.setIcon(QIcon("icons/image_icon.png"))  # Replace with path to your image icon
+            list_item.setData(Qt.UserRole, image_path)
+            self.folder_list.addItem(list_item)
+
 
     def on_folder_selected(self, item):
         item_path = item.data(Qt.UserRole)
@@ -243,6 +265,13 @@ class MainWindow(QMainWindow):
             "4. View web demo for additional details.\n"
             "5. The number of images in the current folder is displayed at the bottom right corner."
         )
+
+
+    def sort_albums(self):
+        current_directory = self.history[self.history_index] if self.history else os.getcwd()
+        self.load_folders_and_images(current_directory, sort=True)
+
+
 
     def update_view(self, folder_path):
         self.update_history(folder_path)
