@@ -32,34 +32,26 @@ class MainWindow(QMainWindow):
     def create_buttons(self):
         self.button_layout = QHBoxLayout()
 
-        self.back_button = self.create_icon_button("Back", "back_icon.png", self.go_back)
-        self.button_layout.addWidget(self.back_button)
-
-        self.forward_button = self.create_icon_button("Forward", "forward_icon.png", self.go_forward)
-        self.button_layout.addWidget(self.forward_button)
-
-        select_folder_button = self.create_icon_button("Select Folder", "directories_icon.png", self.select_folder)
-        self.button_layout.addWidget(select_folder_button)
-
-        select_method_button = self.create_icon_button("Select Method", "method_icon.png", self.open_select_method)
-        self.button_layout.addWidget(select_method_button)
-
-        demo_button = self.create_icon_button("Web Demo", "demo_icon.png", self.open_demo)
-        self.button_layout.addWidget(demo_button)
-
-        info_button = self.create_icon_button("Information", "info_icon.png", self.show_information)
-        self.button_layout.addWidget(info_button)
+        self.back_button = self.add_button_with_label(self.button_layout, "Back", "icons/back_icon.png", self.go_back)
+        self.forward_button = self.add_button_with_label(self.button_layout, "Forward", "icons/forward_icon.png", self.go_forward)
+        self.add_button_with_label(self.button_layout, "Select Folder", "icons/directories_icon.png", self.select_folder)
+        self.add_button_with_label(self.button_layout, "Select Method", "icons/method_icon.png", self.open_select_method)
+        self.add_button_with_label(self.button_layout, "Web Demo", "icons/demo_icon.png", self.open_demo)
+        self.add_button_with_label(self.button_layout, "Information", "icons/info_icon.png", self.show_information)
 
         self.button_layout.addStretch()
         self.frame_settings.layout.addLayout(self.button_layout, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
 
         self.update_navigation_buttons()
 
-    def create_icon_button(self, tooltip, icon_path, callback):
+    def add_button_with_label(self, layout, text, icon_path, callback):
+        button_widget = QWidget()
+        button_layout = QVBoxLayout(button_widget)
+        
         button = QToolButton(self.central_widget)
         button.setIcon(QIcon(icon_path))
         button.setIconSize(QSize(48, 48))  # Increased icon size
-        button.setToolTip(tooltip)
+        button.setToolTip(text)
         button.setStyleSheet(
             """
             QToolButton {
@@ -73,6 +65,17 @@ class MainWindow(QMainWindow):
             """
         )
         button.clicked.connect(callback)
+
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignCenter)
+        label.setStyleSheet("color: white; font-size: 12px;")
+
+        button_layout.addWidget(button)
+        button_layout.addWidget(label)
+        button_layout.setAlignment(Qt.AlignCenter)
+        
+        layout.addWidget(button_widget)
+
         return button
 
     def create_folder_list(self):
@@ -110,11 +113,11 @@ class MainWindow(QMainWindow):
             item_path = os.path.join(directory, item)
             if os.path.isdir(item_path):
                 list_item = QListWidgetItem(item)
-                list_item.setIcon(QIcon("folder_icon.png"))  # Replace with path to your folder icon
+                list_item.setIcon(QIcon("icons/folder_icon.png"))  # Replace with path to your folder icon
                 list_item.setData(Qt.UserRole, item_path)
             elif os.path.isfile(item_path) and item.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
                 list_item = QListWidgetItem(item)
-                list_item.setIcon(QIcon("image_icon.png"))  # Replace with path to your image icon
+                list_item.setIcon(QIcon("icons/image_icon.png"))  # Replace with path to your image icon
                 list_item.setData(Qt.UserRole, item_path)
             else:
                 continue
