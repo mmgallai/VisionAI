@@ -10,6 +10,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Main Frame")
+        self.setGeometry(100, 100, 1200, 800)  # Set a larger default size for the main window
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         
@@ -22,6 +23,8 @@ class MainWindow(QMainWindow):
         
         self.create_buttons()
         self.create_folder_list()
+        self.create_path_label()
+        self.create_image_count_label()
         self.showMaximized()
 
         self.load_initial_directory(os.getcwd())
@@ -76,29 +79,80 @@ class MainWindow(QMainWindow):
 
         self.folder_list.itemDoubleClicked.connect(self.on_folder_selected)
 
+    def create_path_label(self):
+        self.path_label = QLabel(self)
+        self.path_label.setAlignment(Qt.AlignRight)
+        self.path_label.setStyleSheet("color: white; font-size: 16px;")
+        self.layout.addWidget(self.path_label)
+        self.layout.setAlignment(self.path_label, Qt.AlignRight)
+
+    def create_image_count_label(self):
+        self.image_count_label = QLabel(self)
+        self.image_count_label.setAlignment(Qt.AlignRight)
+        self.image_count_label.setStyleSheet("color: white; font-size: 16px;")
+        self.layout.addWidget(self.image_count_label)
+        self.layout.setAlignment(self.image_count_label, Qt.AlignRight)
+
     def load_initial_directory(self, directory):
         self.update_history(directory)
-        self.load_folders(directory)
+        self.load_folders_and_images(directory)
         self.display_folder_contents(directory)
+        self.update_path_label(directory)
 
-    def load_folders(self, directory):
+    def load_folders_and_images(self, directory):
         self.folder_list.clear()
-        folders = [f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))]
+        items = [f for f in os.listdir(directory)]
         
-        for folder in folders:
-            item = QListWidgetItem(folder)
-            item.setIcon(QIcon("folder_icon.png"))  # Replace with path to your folder icon
-            self.folder_list.addItem(item)
+        for item in items:
+            item_path = os.path.join(directory, item)
+            if os.path.isdir(item_path):
+                list_item = QListWidgetItem(item)
+                list_item.setIcon(QIcon("folder_icon.png"))  # Replace with path to your folder icon
+                list_item.setData(Qt.UserRole, item_path)
+            elif os.path.isfile(item_path) and item.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+                list_item = QListWidgetItem(item)
+                list_item.setIcon(QIcon("image_icon.png"))  # Replace with path to your image icon
+                list_item.setData(Qt.UserRole, item_path)
+            else:
+                continue
+
+            self.folder_list.addItem(list_item)
 
     def on_folder_selected(self, item):
-        selected_folder = item.text()
-        folder_path = os.path.join(self.history[self.history_index], selected_folder)
-        self.update_history(folder_path)
-        self.display_folder_contents(folder_path)
-        self.load_folders(folder_path)
+        item_path = item.data(Qt.UserRole)
+        if os.path.isdir(item_path):
+            self.update_history(item_path)
+            self.display_folder_contents(item_path)
+            self.load_folders_and_images(item_path)
+            self.update_path_label(item_path)
+            self.update_image_count_label(item_path)
+        else:
+            # Display the image in the lower view
+            self.display_single_image(item_path)
+
+    def display_single_image(self, image_path):
+        # Remove all widgets below the button layout but keep the buttons and path label
+        while self.frame_settings.layout.count() > 2:  # Keep the button layout and folder list
+            item = self.frame_settings.layout.takeAt(2)
+            if item.widget():
+                item.widget().deleteLater()
+
+        # Display single image
+        scroll_area = QScrollArea(self.central_widget)
+        scroll_widget = QWidget()
+        scroll_layout = QVBoxLayout(scroll_widget)
+        
+        pixmap = QPixmap(image_path).scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        label = QLabel()
+        label.setPixmap(pixmap)
+        label.setAlignment(Qt.AlignCenter)
+        scroll_layout.addWidget(label)
+        
+        scroll_area.setWidget(scroll_widget)
+        self.frame_settings.layout.addWidget(scroll_area, 2, 0)
 
     def display_folder_contents(self, folder_path):
-        # Remove all widgets below the button layout but keep the buttons
+        # Remove all widgets below the button layout but keep the buttons and path label
         while self.frame_settings.layout.count() > 2:  # Keep the button layout and folder list
             item = self.frame_settings.layout.takeAt(2)
             if item.widget():
@@ -122,6 +176,7 @@ class MainWindow(QMainWindow):
         
         scroll_area.setWidget(scroll_widget)
         self.frame_settings.layout.addWidget(scroll_area, 2, 0)
+        self.update_image_count_label(folder_path)  # Update image count label when displaying folder contents
 
     def update_history(self, folder_path):
         # Trim forward history if we're not at the latest entry
@@ -136,16 +191,20 @@ class MainWindow(QMainWindow):
             self.history_index -= 1
             folder_path = self.history[self.history_index]
             self.display_folder_contents(folder_path)
-            self.load_folders(folder_path)
+            self.load_folders_and_images(folder_path)
             self.update_navigation_buttons()
+            self.update_path_label(folder_path)
+            self.update_image_count_label(folder_path)
 
     def go_forward(self):
         if self.history_index < len(self.history) - 1:
             self.history_index += 1
             folder_path = self.history[self.history_index]
             self.display_folder_contents(folder_path)
-            self.load_folders(folder_path)
+            self.load_folders_and_images(folder_path)
             self.update_navigation_buttons()
+            self.update_path_label(folder_path)
+            self.update_image_count_label(folder_path)
 
     def update_navigation_buttons(self):
         self.back_button.setEnabled(self.history_index > 0)
@@ -156,7 +215,9 @@ class MainWindow(QMainWindow):
         if folder_path:
             self.update_history(folder_path)
             self.display_folder_contents(folder_path)
-            self.load_folders(folder_path)
+            self.load_folders_and_images(folder_path)
+            self.update_path_label(folder_path)
+            self.update_image_count_label(folder_path)
 
     def open_select_method(self):
         popup = PopUpWindow(self)
@@ -169,7 +230,16 @@ class MainWindow(QMainWindow):
     def update_view(self, folder_path):
         self.update_history(folder_path)
         self.display_folder_contents(folder_path)
-        self.load_folders(folder_path)
+        self.load_folders_and_images(folder_path)
+        self.update_path_label(folder_path)
+        self.update_image_count_label(folder_path)
+
+    def update_path_label(self, path):
+        self.path_label.setText(f"Current Path: {path}")
+
+    def update_image_count_label(self, folder_path):
+        image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
+        self.image_count_label.setText(f"Number of Images: {len(image_files)}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

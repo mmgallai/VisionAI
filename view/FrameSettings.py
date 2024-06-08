@@ -13,5 +13,10 @@ class FrameSettings:
         palette.setColor(QPalette.Window, QColor(self.color))
         self.widget.setAutoFillBackground(True)
         self.widget.setPalette(palette)
-        self.layout = QGridLayout()
-        self.widget.setLayout(self.layout)
+        
+        # Check if the widget already has a layout
+        if not self.widget.layout():
+            self.layout = QGridLayout()
+            self.widget.setLayout(self.layout)
+        else:
+            self.layout = self.widget.layout()
