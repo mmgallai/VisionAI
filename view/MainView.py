@@ -42,14 +42,16 @@ class MainWindow(QMainWindow):
         self.add_button_with_label(self.button_layout, "Select Folder", "icons/directories_icon.png", self.select_folder)
         self.add_button_with_label(self.button_layout, "Select Method", "icons/method_icon.png", self.open_select_method)
         self.add_button_with_label(self.button_layout, "Web Demo", "icons/demo_icon.png", self.open_demo)
-        self.add_button_with_label(self.button_layout, "Information", "icons/info_icon.png", self.show_information)
         self.sort_button = self.add_button_with_label(self.button_layout, "Sort", "icons/sort_icon.png", self.sort_albums)
 
-        
+        # Swap positions of Sort and Information buttons
+        self.information_button = self.add_button_with_label(self.button_layout, "Information", "icons/info_icon.png", self.show_information)
+
         self.button_layout.addStretch()
         self.frame_settings.layout.addLayout(self.button_layout, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
 
         self.update_navigation_buttons()
+
 
     def add_button_with_label(self, layout, text, icon_path, callback):
         button_widget = QWidget()
@@ -102,7 +104,7 @@ class MainWindow(QMainWindow):
     def create_image_count_label(self):
         self.image_count_label = QLabel(self)
         self.image_count_label.setAlignment(Qt.AlignRight)
-        self.image_count_label.setStyleSheet("color: white; fyont-size: 16px;")
+        self.image_count_label.setStyleSheet("color: white; font-size: 16px;")
         self.layout.addWidget(self.image_count_label)
         self.layout.setAlignment(self.image_count_label, Qt.AlignRight)
 
@@ -258,12 +260,21 @@ class MainWindow(QMainWindow):
     def show_information(self):
         QMessageBox.information(self, "Information", 
             "This software allows you to organize images using Vision AI or manually.\n"
+            "Features include:\n"
+            "1. Selecting a folder to display its contents.\n"
+            "2. Navigation through history with back and forward buttons.\n"
+            "3. Sorting folders by the number of images they contain.\n"
+            "4. Viewing single images on double-click.\n"
+            "5. Clicking 'Vision AI' will create albums for their respective folders.\n"
+            "6. Selecting 'Manual' will allow you to selectively create albums for particular images, including the option to select multiple images.\n"
+            "\n"
             "Instructions:\n"
             "1. Select 'Select Folder' to choose a directory.\n"
             "2. Use 'Select Method' to choose Vision AI or Manual classification.\n"
             "3. Navigate through folders using 'Back' and 'Forward' buttons.\n"
-            "4. View web demo for additional details.\n"
-            "5. The number of images in the current folder is displayed at the bottom right corner."
+            "4. View web demo to check model performance and working, hosted on Hugging Face.\n"
+            "5. The number of images in the current folder is displayed at the bottom right corner.\n"
+            "6. The current directory path is displayed at the bottom right corner, just above the number of images.\n"
         )
 
 
@@ -286,6 +297,15 @@ class MainWindow(QMainWindow):
     def update_image_count_label(self, folder_path):
         image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
         self.image_count_label.setText(f"Number of Images: {len(image_files)}")
+
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Close Confirmation', 'Are you sure you want to close the application?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
