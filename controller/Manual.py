@@ -29,4 +29,6 @@ class Manual:
             folder_path = os.path.dirname(image_path)
             class_folder = os.path.join(folder_path, class_name)
             Path(class_folder).mkdir(parents=True, exist_ok=True)
-            os.rename(image_path, os.path.join(class_folder, os.path.basename(image_path)))
+            new_image_path = os.path.join(class_folder, os.path.basename(image_path))
+            os.rename(image_path, new_image_path)
+            print(f"Moved {image_path} to {new_image_path}")

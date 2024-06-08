@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QPushButton, QWidget, QVBoxLayout, QFileDialog
+from PyQt5.QtWidgets import QPushButton, QWidget, QVBoxLayout
 from PyQt5.QtCore import Qt
 from view.PopUpWindow import PopUpWindow
 
