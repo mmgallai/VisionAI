@@ -6,7 +6,7 @@ from PIL import Image
 
 class AI:
     def __init__(self):
-        self.model_path = 'best.onnx'
+        self.model_path = os.path.join('model', 'best.onnx') 
         self.session = ort.InferenceSession(self.model_path)
         self.input_name = self.session.get_inputs()[0].name
         self.class_names = ["Boston", "Chicago", "LosAngeles", "Phoenix", "WashingtonDC"]
