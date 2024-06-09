@@ -2,13 +2,14 @@ from PyQt5.QtWidgets import QDialog, QLabel, QPushButton, QVBoxLayout, QFileDial
 from PyQt5.QtCore import Qt
 from controller.AI import AI
 from controller.Manual import Manual
-import os
 
 class PopUpWindow(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.parent = parent
         self.setWindowTitle("Choose Classification Method")
         self.setStyleSheet("background-color: #2b2b2b; color: white;")
+        self.setFixedSize(500, 250)
 
         self.label = QLabel("Do you want to classify the photos using Vision AI or manually?", self)
         self.label.setStyleSheet("color: white; font-size: 18px;")
@@ -55,7 +56,6 @@ class PopUpWindow(QDialog):
         self.layout.addWidget(self.manual_button)
 
         self.setLayout(self.layout)
-        self.setFixedSize(500, 250)
 
         self.vision_ai_button.clicked.connect(self.use_vision_ai)
         self.manual_button.clicked.connect(self.use_manual)
@@ -65,18 +65,10 @@ class PopUpWindow(QDialog):
         if folder_path:
             ai_instance = AI()
             ai_instance.classify_folder(folder_path)
-            self.parent().update_view(folder_path)
+            self.parent.update_view(folder_path)
         self.accept()
 
     def use_manual(self):
-        file_dialog = QFileDialog()
-        file_dialog.setFileMode(QFileDialog.ExistingFiles)
-        file_dialog.setNameFilters(["Image files (*.png *.jpg *.jpeg *.bmp)"])
-        if file_dialog.exec_():
-            image_paths = file_dialog.selectedFiles()
-            manual_instance = Manual()
-            manual_instance.classify_images(image_paths)
-            if image_paths:
-                folder_path = os.path.dirname(image_paths[0])
-                self.parent().update_view(folder_path)
+        manual_instance = Manual(self.parent, self.parent.initial_directory)
+        manual_instance.classify_images()
         self.accept()

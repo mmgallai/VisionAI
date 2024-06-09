@@ -1,13 +1,14 @@
 from PyQt5.QtWidgets import QHBoxLayout, QToolButton, QWidget, QVBoxLayout, QLabel, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
-import os  # Add this import
+from PyQt5.QtGui import QFont
+import os
 
 class ButtonPanel:
     def __init__(self, parent):
         self.parent = parent
         self.layout = QHBoxLayout()
-        self.path_label = QLabel(self.parent)  # Initialize path label
+        self.path_label = QLabel(self.parent)  # Initialize path label, we might change that
         self.image_count_label = QLabel(self.parent)  # Initialize image count label
         self.create_buttons()
         
@@ -65,7 +66,11 @@ class ButtonPanel:
     def update_image_count_label(self, folder_path):
         image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
         self.image_count_label.setText(f"Number of Images: {len(image_files)}")
+        font = QFont()
+        font.setPointSize(18)
+        self.image_count_label.setFont(font)
         self.image_count_label.setStyleSheet("color: white")
+        
 
     def show_close_confirmation(self):
         reply = QMessageBox.question(self.parent, 'Close Confirmation', 'Are you sure you want to close the application?',

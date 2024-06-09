@@ -10,7 +10,7 @@ import os
 import webbrowser
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, initial_folder):
         super().__init__()
         self.setWindowTitle("Main Frame")
         self.setGeometry(100, 100, 1200, 800)
@@ -30,7 +30,9 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.image_display)
 
         self.showMaximized()
-        self.history_manager.load_initial_directory(os.getcwd())
+        
+        self.initial_directory = initial_folder  # Store the initial directory
+        self.history_manager.load_initial_directory(self.initial_directory)
 
     def update_view(self, folder_path):
         self.history_manager.update_history(folder_path)
