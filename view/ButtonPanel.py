@@ -40,11 +40,11 @@ class ButtonPanel:
             QToolButton {
                 border: none;
                 background-color: transparent;
-                padding: 0px;
+                padding: 10px;  /* Increased padding for larger hover area */
                 font-family: Consolas;
             }
             QToolButton:hover {
-                background-color: #3EB489;
+                background-color: rgba(255, 255, 255, 0.2); /* Light transparent hover color */
             }
             """
         )
@@ -57,7 +57,7 @@ class ButtonPanel:
         button_layout.addWidget(button, alignment=Qt.AlignCenter)
         button_layout.addWidget(label, alignment=Qt.AlignCenter)
         button_layout.setAlignment(Qt.AlignCenter)
-        button_layout.setContentsMargins(33, 33, 0, 0)  # Remove margins
+        button_layout.setContentsMargins(10, 10, 10, 10)  # Adjust margins for better spacing
 
         button_widget.setLayout(button_layout)
         self.layout.addWidget(button_widget)
