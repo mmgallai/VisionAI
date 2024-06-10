@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMessageBox, QDialog
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QDialog
 from PyQt5.QtGui import QColor, QFont
 from view.FrameSettings import FrameSettings
 from view.ButtonPanel import ButtonPanel
@@ -7,13 +7,14 @@ from view.ImageDisplay import ImageDisplay
 from view.HistoryManager import HistoryManager
 from view.SelectMethod import SelectMethod
 from view.CloseConfirmationDialog import CloseConfirmationDialog
+from view.InformationDialog import InformationDialog  # Import InformationDialog
 import os
 import webbrowser
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_folder):
         super().__init__()
-        self.setWindowTitle("VisonAI")
+        self.setWindowTitle("VisionAI")
         self.setGeometry(100, 100, 1200, 800)
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -66,25 +67,8 @@ class MainWindow(QMainWindow):
         webbrowser.open("https://huggingface.co/spaces/jagruthh/cities_small")
 
     def show_information(self):
-        QMessageBox.information(self, "Information", 
-            "This software allows you to organize images using Vision AI or manually.\n"
-            "Features include:\n"
-            "1. Selecting a folder to display its contents.\n"
-            "2. Navigation through history with back and forward buttons.\n"
-            "3. Sorting folders by the number of images they contain.\n"
-            "4. Viewing single images on double-click.\n"
-            "5. Clicking 'Vision AI' will create albums for their respective folders.\n"
-            "6. Selecting 'Manual' will allow you to selectively create albums for particular images, including the option to select multiple images.\n"
-            "\n"
-            "Instructions:\n"
-            "1. Select 'Select Folder' to choose a directory.\n"
-            "2. Use 'Select Method' to choose Vision AI or Manual classification.\n"
-            "3. Navigate through folders using 'Back' and 'Forward' buttons.\n"
-            "4. View web demo to check model performance and working, hosted on Hugging Face.\n"
-            "5. The number of images in the current folder is displayed at the bottom right corner.\n"
-            "6. The current directory path is displayed at the bottom right corner, just above the number of images.\n"
-        )
-
+        info_dialog = InformationDialog(self)
+        info_dialog.exec_()
 
     def closeEvent(self, event):
         dialog = CloseConfirmationDialog(self)

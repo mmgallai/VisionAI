@@ -6,7 +6,7 @@ class InformationDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Information")
-        self.setFixedSize(600, 400)
+        self.setFixedSize(600, 700)
         self.setStyleSheet("background-color: #2b2b2b; color: white; font-family: Consolas; font-size: 20px;")
 
         self.layout = QVBoxLayout(self)
