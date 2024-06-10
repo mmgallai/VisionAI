@@ -1,19 +1,20 @@
-from PyQt5.QtWidgets import QHBoxLayout, QToolButton, QWidget, QVBoxLayout, QLabel, QMessageBox
+from PyQt5.QtWidgets import QHBoxLayout, QToolButton, QWidget, QVBoxLayout, QLabel, QMessageBox, QPushButton
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QFont
 import os
+from view.ButtonStyle import ButtonStyle  # Import ButtonStyle
 
 class ButtonPanel:
     def __init__(self, parent):
         self.parent = parent
         self.layout = QHBoxLayout()
-        self.path_label = QLabel(self.parent)  # Initialize path label, we might change that
-        self.image_count_label = QLabel(self.parent)  # Initialize image count label
+        self.path_label = QLabel(self.parent)
+        self.image_count_label = QLabel(self.parent)
         self.create_buttons()
         
-        self.layout.addWidget(self.path_label)  # Add path label to layout
-        self.layout.addWidget(self.image_count_label)  # Add image count label to layout
+        self.layout.addWidget(self.path_label)
+        self.layout.addWidget(self.image_count_label)
 
         self.parent.frame_settings.layout.addLayout(self.layout, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
 
@@ -39,7 +40,8 @@ class ButtonPanel:
             QToolButton {
                 border: none;
                 background-color: transparent;
-                padding: 10px;
+                padding: 0px;
+                font-family: Consolas;
             }
             QToolButton:hover {
                 background-color: #3EB489;
@@ -49,10 +51,15 @@ class ButtonPanel:
         button.clicked.connect(callback)
         label = QLabel(text)
         label.setAlignment(Qt.AlignCenter)
-        label.setStyleSheet("color: white; font-size: 12px;")
-        button_layout.addWidget(button)
-        button_layout.addWidget(label)
+        label.setStyleSheet("color: white; font-family: Consolas; font-size: 16px;")  # Increased font size
+        label.setFixedHeight(30)  # Ensure fixed height for better alignment
+
+        button_layout.addWidget(button, alignment=Qt.AlignCenter)
+        button_layout.addWidget(label, alignment=Qt.AlignCenter)
         button_layout.setAlignment(Qt.AlignCenter)
+        button_layout.setContentsMargins(33, 33, 0, 0)  # Remove margins
+
+        button_widget.setLayout(button_layout)
         self.layout.addWidget(button_widget)
         return button
 
@@ -68,9 +75,9 @@ class ButtonPanel:
         self.image_count_label.setText(f"Number of Images: {len(image_files)}")
         font = QFont()
         font.setPointSize(18)
+        font.setFamily("Consolas")
         self.image_count_label.setFont(font)
         self.image_count_label.setStyleSheet("color: white")
-        
 
     def show_close_confirmation(self):
         reply = QMessageBox.question(self.parent, 'Close Confirmation', 'Are you sure you want to close the application?',

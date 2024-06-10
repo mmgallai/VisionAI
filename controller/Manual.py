@@ -1,7 +1,8 @@
-import os
-from pathlib import Path
 from PyQt5.QtWidgets import QInputDialog, QFileDialog, QMessageBox, QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QComboBox
 from PyQt5.QtCore import Qt
+from view.ButtonStyle import ButtonStyle  # Import ButtonStyle
+import os
+from pathlib import Path
 import onnxruntime as ort
 import numpy as np
 from PIL import Image
@@ -44,12 +45,12 @@ class Manual:
         else:
             album_dialog = QDialog(self.parent)
             album_dialog.setWindowTitle("Select Album")
-            album_dialog.setStyleSheet("background-color: #2b2b2b; color: white;")
+            album_dialog.setStyleSheet("background-color: #2b2b2b; color: white; font-family: Consolas;")
             album_dialog.setFixedSize(400, 200)
 
             layout = QVBoxLayout(album_dialog)
             label = QLabel("Choose an album or create a new one:", album_dialog)
-            label.setStyleSheet("font-size: 16px;")
+            label.setStyleSheet("font-size: 16px; font-family: Consolas;")
             layout.addWidget(label)
 
             album_combo = QComboBox(album_dialog)
@@ -57,21 +58,7 @@ class Manual:
             layout.addWidget(album_combo)
 
             button = QPushButton("OK", album_dialog)
-            button.setStyleSheet(
-                """
-                QPushButton {
-                    border: 2px solid #3EB489; 
-                    color: white;
-                    font-size: 16px;
-                    padding: 10px;
-                    border-radius: 10px;
-                    background-color: transparent;
-                }
-                QPushButton:hover {
-                    background-color: #3EB489;
-                }
-                """
-            )
+            button.setStyleSheet(ButtonStyle.get_default_style())  # Use ButtonStyle
             layout.addWidget(button)
             button.clicked.connect(lambda: self.handle_album_selection(album_combo, image_paths, album_dialog))
             album_dialog.exec_()
@@ -87,33 +74,19 @@ class Manual:
     def create_new_album(self, image_paths):
         album_dialog = QDialog(self.parent)
         album_dialog.setWindowTitle("Create New Album")
-        album_dialog.setStyleSheet("background-color: #2b2b2b; color: white;")
+        album_dialog.setStyleSheet("background-color: #2b2b2b; color: white; font-family: Consolas;")
         album_dialog.setFixedSize(400, 200)
 
         layout = QVBoxLayout(album_dialog)
         label = QLabel("Enter the name of the new album:", album_dialog)
-        label.setStyleSheet("font-size: 16px;")
+        label.setStyleSheet("font-size: 16px; font-family: Consolas;")
         layout.addWidget(label)
 
         album_input = QLineEdit(album_dialog)
         layout.addWidget(album_input)
 
         button = QPushButton("Create", album_dialog)
-        button.setStyleSheet(
-            """
-            QPushButton {
-                border: 2px solid #3EB489; 
-                color: white;
-                font-size: 16px;
-                padding: 10px;
-                border-radius: 10px;
-                background-color: transparent;
-            }
-            QPushButton:hover {
-                background-color: #3EB489;
-            }
-            """
-        )
+        button.setStyleSheet(ButtonStyle.get_default_style())  # Use ButtonStyle
         layout.addWidget(button)
         button.clicked.connect(lambda: self.handle_new_album_creation(album_input, image_paths, album_dialog))
         album_dialog.exec_()

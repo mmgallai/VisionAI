@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMessageBox
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QFont
 from view.FrameSettings import FrameSettings
 from view.ButtonPanel import ButtonPanel
 from view.FolderList import FolderList
 from view.ImageDisplay import ImageDisplay
 from view.HistoryManager import HistoryManager
-from view.PopUpWindow import PopUpWindow
+from view.SelectMethod import SelectMethod  # Updated import
 import os
 import webbrowser
 
@@ -34,6 +34,16 @@ class MainWindow(QMainWindow):
         self.initial_directory = initial_folder  # Store the initial directory
         self.history_manager.load_initial_directory(self.initial_directory)
 
+        # Set the default font for all widgets in the main window
+        self.set_font_for_all_widgets(self, "Consolas", 12)
+
+    def set_font_for_all_widgets(self, widget, font_family, font_size):
+        font = QFont(font_family, font_size)
+        widget.setFont(font)
+        for child in widget.children():
+            if isinstance(child, QWidget):
+                self.set_font_for_all_widgets(child, font_family, font_size)
+
     def update_view(self, folder_path):
         self.history_manager.update_history(folder_path)
         self.image_display.display_folder_contents(folder_path)
@@ -48,7 +58,7 @@ class MainWindow(QMainWindow):
         self.button_panel.update_image_count_label(folder_path)
 
     def open_select_method(self):
-        popup = PopUpWindow(self)
+        popup = SelectMethod(self)  # Updated class name
         popup.exec_()
 
     def open_demo(self):

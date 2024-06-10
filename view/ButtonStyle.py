@@ -5,6 +5,7 @@ class ButtonStyle:
             QPushButton {
                 border: 2px solid #3EB489; 
                 color: white;
+                font-family: Consolas;
                 font-size: 18px;
                 border-radius: 15px;
                 padding: 10px 20px;
