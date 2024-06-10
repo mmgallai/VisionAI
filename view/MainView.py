@@ -5,14 +5,15 @@ from view.ButtonPanel import ButtonPanel
 from view.FolderList import FolderList
 from view.ImageDisplay import ImageDisplay
 from view.HistoryManager import HistoryManager
-from view.SelectMethod import SelectMethod  # Updated import
+from view.SelectMethod import SelectMethod
+from view.CloseConfirmationDialog import CloseConfirmationDialog
 import os
 import webbrowser
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_folder):
         super().__init__()
-        self.setWindowTitle("Main Frame")
+        self.setWindowTitle("VisonAI")
         self.setGeometry(100, 100, 1200, 800)
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
@@ -84,9 +85,10 @@ class MainWindow(QMainWindow):
             "6. The current directory path is displayed at the bottom right corner, just above the number of images.\n"
         )
 
+
     def closeEvent(self, event):
-        reply = self.button_panel.show_close_confirmation()
-        if reply:
+        dialog = CloseConfirmationDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
             event.accept()
         else:
             event.ignore()
