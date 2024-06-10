@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QMessageBox, QDialog
 from PyQt5.QtGui import QColor, QFont
 from view.FrameSettings import FrameSettings
 from view.ButtonPanel import ButtonPanel
