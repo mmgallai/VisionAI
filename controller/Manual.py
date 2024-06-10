@@ -1,32 +1,14 @@
-from PyQt5.QtWidgets import QInputDialog, QFileDialog, QMessageBox, QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QComboBox
+from PyQt5.QtWidgets import QFileDialog, QDialog, QVBoxLayout, QLabel, QPushButton, QLineEdit, QComboBox
 from PyQt5.QtCore import Qt
 from view.ButtonStyle import ButtonStyle  # Import ButtonStyle
 import os
 from pathlib import Path
-import onnxruntime as ort
-import numpy as np
-from PIL import Image
 
 class Manual:
     def __init__(self, parent, initial_directory):
         self.parent = parent
         self.initial_directory = initial_directory
-        self.model_path = os.path.join('model', 'best.onnx')
-        self.session = ort.InferenceSession(self.model_path)
-        self.input_name = self.session.get_inputs()[0].name
-        self.class_names = ["Boston", "Chicago", "LosAngeles", "Phoenix", "WashingtonDC"]
         print("Manual class instantiated")
-
-    def classify_image(self, image_path):
-        img = Image.open(image_path).resize((224, 224))
-        img_array = np.array(img).astype(np.float32) / 255.0  # Normalize the image
-        img_array = img_array.transpose(2, 0, 1)  # Convert to (C, H, W)
-        img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension
-
-        outputs = self.session.run(None, {self.input_name: img_array})
-        prediction = outputs[0][0]
-        class_id = np.argmax(prediction)
-        return self.class_names[class_id]
 
     def classify_images(self):
         file_dialog = QFileDialog()
@@ -40,13 +22,13 @@ class Manual:
     def select_album(self, image_paths):
         albums = [f.name for f in Path(self.initial_directory).iterdir() if f.is_dir()]
         if not albums:
-            QMessageBox.information(self.parent, "No Albums Found", "No albums found. Please create a new album.", QMessageBox.Ok)
+            self.show_warning_message("No Albums Found", "No albums found. Please create a new album.")
             self.create_new_album(image_paths)
         else:
             album_dialog = QDialog(self.parent)
             album_dialog.setWindowTitle("Select Album")
             album_dialog.setStyleSheet("background-color: #2b2b2b; color: white; font-family: Consolas; font-size: 20px;")
-            album_dialog.setFixedSize(500, 300)  # Increased size to show all label text
+            album_dialog.setFixedSize(500, 300)
 
             layout = QVBoxLayout(album_dialog)
             label = QLabel("Choose an album or create a new one:", album_dialog)
