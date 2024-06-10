@@ -11,12 +11,21 @@ class ButtonPanel:
         self.layout = QHBoxLayout()
         self.path_label = QLabel(self.parent)
         self.image_count_label = QLabel(self.parent)
+        self.initialize_labels()
         self.create_buttons()
         
         self.layout.addWidget(self.path_label)
         self.layout.addWidget(self.image_count_label)
 
         self.parent.frame_settings.layout.addLayout(self.layout, 0, 0, alignment=Qt.AlignTop | Qt.AlignLeft)
+
+    def initialize_labels(self):
+        font = QFont()
+        font.setPointSize(18)
+        font.setFamily("Consolas")
+
+        self.image_count_label.setFont(font)
+        self.image_count_label.setStyleSheet("color: white")
 
     def create_buttons(self):
         self.back_button = self.add_button_with_label("Back", "icons/back_icon.png", self.parent.history_manager.go_back)
@@ -40,11 +49,11 @@ class ButtonPanel:
             QToolButton {
                 border: none;
                 background-color: transparent;
-                padding: 0px;
+                padding: 10px;  /* Increased padding for larger hover area */
                 font-family: Consolas;
             }
             QToolButton:hover {
-                background-color: #3EB489;
+                background-color: rgba(255, 255, 255, 0.2); /* Light transparent hover color */
             }
             """
         )
@@ -57,7 +66,7 @@ class ButtonPanel:
         button_layout.addWidget(button, alignment=Qt.AlignCenter)
         button_layout.addWidget(label, alignment=Qt.AlignCenter)
         button_layout.setAlignment(Qt.AlignCenter)
-        button_layout.setContentsMargins(33, 33, 0, 0)  # Remove margins
+        button_layout.setContentsMargins(10, 10, 10, 10)  # Adjust margins for better spacing
 
         button_widget.setLayout(button_layout)
         self.layout.addWidget(button_widget)
@@ -73,11 +82,6 @@ class ButtonPanel:
     def update_image_count_label(self, folder_path):
         image_files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))]
         self.image_count_label.setText(f"Number of Images: {len(image_files)}")
-        font = QFont()
-        font.setPointSize(18)
-        font.setFamily("Consolas")
-        self.image_count_label.setFont(font)
-        self.image_count_label.setStyleSheet("color: white")
 
     def show_close_confirmation(self):
         reply = QMessageBox.question(self.parent, 'Close Confirmation', 'Are you sure you want to close the application?',
