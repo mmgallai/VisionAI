@@ -10,7 +10,7 @@ class Manual:
         self.initial_directory = initial_directory
         print("Manual class instantiated")
 
-    def classify_images(self):
+    def classify_images_manually(self):
         file_dialog = QFileDialog()
         file_dialog.setFileMode(QFileDialog.ExistingFiles)
         file_dialog.setNameFilters(["Image files (*.png *.jpg *.jpeg *.bmp)"])

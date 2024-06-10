@@ -46,5 +46,6 @@ class SelectMethod(QDialog):
         
     def use_manual(self):
         manual_instance = Manual(self.parent, self.parent.initial_directory)
-        manual_instance.classify_images()
+        manual_instance.classify_images_manually()
+        self.parent.update_view(self.parent.initial_directory)
         self.accept()
