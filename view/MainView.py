@@ -52,6 +52,10 @@ class MainWindow(QMainWindow):
         self.folder_list.load_folders_and_images(folder_path)
         self.update_path_label(folder_path)
         self.update_image_count_label(folder_path)
+        self.button_panel.update_navigation_buttons(
+            self.history_manager.history_index > 0, 
+            self.history_manager.history_index < len(self.history_manager.history) - 1
+        )
 
     def update_path_label(self, path):
         self.button_panel.update_path_label(path)
