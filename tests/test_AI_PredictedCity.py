@@ -26,7 +26,7 @@ class TestAI_PredictedCity(unittest.TestCase):
         
         # Construct the path to the test image dynamically
         script_dir = os.path.dirname(__file__)
-        test_image_path = os.path.join(script_dir, "..", "tests", "image.jpg") 
+        test_image_path = os.path.join(script_dir, "..", "test images", "WashingtonDC_0000198_2019_06_068_38.89074697428177_-77.03347790946887_FTJ2BQ4gLzA-gewrX6tJlw.jpg") 
 
         # Ensure the image path exists before running the test
         self.assertTrue(os.path.isfile(test_image_path), f"Test image file does not exist: {test_image_path}")
