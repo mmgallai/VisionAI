@@ -1,9 +1,12 @@
-from PyQt5.QtWidgets import QHBoxLayout, QToolButton, QWidget, QVBoxLayout, QLabel, QMessageBox, QPushButton
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QFont
 import os
+import shutil
+
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QFont, QIcon
+from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QMessageBox, QPushButton,
+                             QToolButton, QVBoxLayout, QWidget)
 from view.ButtonStyle import ButtonStyle  # Import ButtonStyle
+
 
 class ButtonPanel:
     def __init__(self, parent):
@@ -35,6 +38,7 @@ class ButtonPanel:
         self.add_button_with_label("Web Demo", "icons/demo_icon.png", self.parent.open_demo)
         self.add_button_with_label("Sort", "icons/sort_icon.png", self.parent.folder_list.sort_albums)
         self.add_button_with_label("Information", "icons/info_icon.png", self.parent.show_information)
+        self.add_button_with_label("Delete", "icons/delete_icon.png", self.parent.confirm_delete)
         self.layout.addStretch()
 
     def add_button_with_label(self, text, icon_path, callback):
@@ -71,7 +75,22 @@ class ButtonPanel:
         button_widget.setLayout(button_layout)
         self.layout.addWidget(button_widget)
         return button
+    
+    def confirm_delete(self):
+            folder_path = self.parent.folder_list.selected_folder_path
+            if folder_path:
+                reply = QMessageBox.question(self.parent, 'Confirmation', 'Are you sure you want to delete the album folder?', 
+                                            QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                if reply == QMessageBox.Yes:
+                    try:
+                        shutil.rmtree(folder_path)
+                        QMessageBox.information(self.parent, 'Success', 'Folder deleted successfully!')
+                    except Exception as e:
+                        QMessageBox.warning(self.parent, 'Error', f'An error occurred: {str(e)}')
+            else:
+                QMessageBox.warning(self.parent, 'Warning', 'Please select a folder to delete.')
 
+                
     def update_navigation_buttons(self, can_go_back, can_go_forward):
         self.back_button.setEnabled(can_go_back)
         self.forward_button.setEnabled(can_go_forward)
