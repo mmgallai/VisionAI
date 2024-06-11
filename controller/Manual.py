@@ -89,8 +89,19 @@ class Manual:
         album_path = os.path.join(self.initial_directory, album_name)
         for image_path in image_paths:
             new_image_path = os.path.join(album_path, os.path.basename(image_path))
-            os.rename(image_path, new_image_path)
-            print(f"Moved {image_path} to {new_image_path}")
+            if not os.path.exists(new_image_path):
+                os.rename(image_path, new_image_path)
+                print(f"Moved {image_path} to {new_image_path}")
+            else:
+                # File exists, add a suffix to the filename
+                base, ext = os.path.splitext(new_image_path)
+                counter = 1
+                new_image_path_with_suffix = f"{base}_{counter}{ext}"
+                while os.path.exists(new_image_path_with_suffix):
+                    counter += 1
+                    new_image_path_with_suffix = f"{base}_{counter}{ext}"
+                os.rename(image_path, new_image_path_with_suffix)
+                print(f"Moved {image_path} to {new_image_path_with_suffix}")
         self.show_success_message("Success", f"Images have been saved to the album '{album_name}'.")
 
     def show_success_message(self, title, message):
