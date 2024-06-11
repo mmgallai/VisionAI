@@ -18,7 +18,7 @@ class TestButtonPanel(unittest.TestCase):
     
     def test_ButtonPanelExists(self):
         buttons = self.find_buttons_in_layout(self.button_panel.layout)
-        self.assertEqual(len(buttons), 7, "There should be exactly 7 buttons in the button panel")
+        self.assertEqual(len(buttons), 8, "There should be exactly 8 buttons in the button panel")
     
     def find_buttons_in_layout(self, layout):
         buttons = []
