@@ -34,8 +34,11 @@ class AI:
             class_folder = os.path.join(self.initial_directory, class_name)
             Path(class_folder).mkdir(parents=True, exist_ok=True)
             new_image_path = os.path.join(class_folder, os.path.basename(image_path))
-            os.rename(image_path, new_image_path)
-            print(f"Moved {image_path} to {new_image_path}")
+            if not os.path.exists(new_image_path):
+                os.rename(image_path, new_image_path)
+                print(f"Moved {image_path} to {new_image_path}")
+            else:
+                print(f"File {new_image_path} already exists, skipping.")
         self.show_success_message("Success", "Images have been classified and moved to their respective folders.")
 
     def show_success_message(self, title, message):
