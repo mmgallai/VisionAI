@@ -1,15 +1,20 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QDialog
-from PyQt5.QtGui import QColor, QFont
-from view.FrameSettings import FrameSettings
-from view.ButtonPanel import ButtonPanel
-from view.FolderList import FolderList
-from view.ImageDisplay import ImageDisplay
-from view.HistoryManager import HistoryManager
-from view.SelectMethod import SelectMethod
-from view.CloseConfirmationDialog import CloseConfirmationDialog
-from view.InformationDialog import InformationDialog  # Import InformationDialog
 import os
+import shutil
 import webbrowser
+
+from PyQt5.QtGui import QColor, QFont, QIcon
+from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QVBoxLayout,
+                             QWidget)
+from view.ButtonPanel import ButtonPanel
+from view.CloseConfirmationDialog import CloseConfirmationDialog
+from view.FolderList import FolderList
+from view.FrameSettings import FrameSettings
+from view.HistoryManager import HistoryManager
+from view.ImageDisplay import ImageDisplay
+from view.InformationDialog import \
+    InformationDialog  # Import InformationDialog
+from view.SelectMethod import SelectMethod
+
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_folder):
@@ -25,10 +30,10 @@ class MainWindow(QMainWindow):
 
         self.history_manager = HistoryManager(self)
         self.image_display = ImageDisplay(self)
-        self.folder_list = FolderList(self)
+        self.folder_list = FolderList(self)  # Instantiate FolderList widget
         self.button_panel = ButtonPanel(self)
 
-        self.layout.addWidget(self.folder_list)
+        self.layout.addWidget(self.folder_list)  # Add FolderList widget to layout
         self.layout.addWidget(self.image_display)
 
         self.showMaximized()
@@ -52,10 +57,6 @@ class MainWindow(QMainWindow):
         self.folder_list.load_folders_and_images(folder_path)
         self.update_path_label(folder_path)
         self.update_image_count_label(folder_path)
-        self.button_panel.update_navigation_buttons(
-            self.history_manager.history_index > 0, 
-            self.history_manager.history_index < len(self.history_manager.history) - 1
-        )
 
     def update_path_label(self, path):
         self.button_panel.update_path_label(path)
@@ -66,6 +67,23 @@ class MainWindow(QMainWindow):
     def open_select_method(self):
         popup = SelectMethod(self)  # Updated class name
         popup.exec_()
+    
+    def confirm_delete(self):
+        reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            folder_path = self.folder_list.selected_folder_path
+            if folder_path:
+                try:
+                    shutil.rmtree(folder_path)
+                    QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
+                    # Optionally, you can update the view after deletion
+                    self.update_view(self.initial_directory)
+                except Exception as e:
+                    QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
+        else:
+            return
+
+
 
     def open_demo(self):
         webbrowser.open("https://huggingface.co/spaces/jagruthh/cities_small")
