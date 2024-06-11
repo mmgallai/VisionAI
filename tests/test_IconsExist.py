@@ -14,7 +14,8 @@ class TestIconsExist(unittest.TestCase):
             "image_icon.png",
             "info_icon.png",
             "method_icon.png",
-            "sort_icon.png"
+            "sort_icon.png",
+            "delete_icon.png"
         ]
 
         for icon in icon_files:
