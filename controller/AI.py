@@ -25,12 +25,15 @@ class AI:
 
         outputs = self.session.run(None, {self.input_name: img_array})
         prediction = outputs[0][0]
+        print("outputs ", outputs)
+        print("prediction ",  prediction)
         class_id = np.argmax(prediction)
         return self.class_names[class_id]
 
     def classify_files(self, image_paths):
         for image_path in image_paths:
             class_name = self.classify_image(image_path)
+            print(class_name)
             class_folder = os.path.join(self.initial_directory, class_name)
             Path(class_folder).mkdir(parents=True, exist_ok=True)
             new_image_path = os.path.join(class_folder, os.path.basename(image_path))
