@@ -1,7 +1,11 @@
-from PyQt5.QtWidgets import QListWidget, QListWidgetItem, QFileDialog
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt
 import os
+import shutil
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QFileDialog, QListWidget, QListWidgetItem,
+                             QMessageBox)
+
 
 class FolderList(QListWidget):
     def __init__(self, parent):
@@ -9,7 +13,8 @@ class FolderList(QListWidget):
         self.parent = parent
         self.setStyleSheet("background-color: #2b2b2b; color: white;")
         self.parent.frame_settings.layout.addWidget(self, 1, 0)
-        self.itemDoubleClicked.connect(self.on_folder_selected)
+        self.itemClicked.connect(self.on_folder_selected)
+        self.selected_folder_path = None  # Initialize selected_folder_path attribute
 
     def load_folders_and_images(self, directory, sort=False):
         self.clear()
@@ -39,22 +44,33 @@ class FolderList(QListWidget):
     def on_folder_selected(self, item):
         item_path = item.data(Qt.UserRole)
         if os.path.isdir(item_path):
-            self.parent.history_manager.update_history(item_path)
-            self.parent.image_display.display_folder_contents(item_path)
-            self.load_folders_and_images(item_path)
-            self.parent.update_path_label(item_path)
-            self.parent.update_image_count_label(item_path)
-        else:
-            self.parent.image_display.display_single_image(item_path)
+            self.selected_folder_path = item_path  # Update selected_folder_path
+            self.delete_folder(item_path)
 
     def select_folder(self):
         folder_path = QFileDialog.getExistingDirectory(self.parent, "Select Folder")
         if folder_path:
+            self.selected_folder_path = folder_path  # Update selected_folder_path
             self.parent.history_manager.update_history(folder_path)
             self.parent.image_display.display_folder_contents(folder_path)
             self.load_folders_and_images(folder_path)
             self.parent.update_path_label(folder_path)
             self.parent.update_image_count_label(folder_path)
+
+    def delete_folder(self, folder_path):
+        reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            if folder_path:
+                try:
+                    shutil.rmtree(folder_path)
+                    QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
+                    # Optionally, you can update the view after deletion
+                    self.load_folders_and_images(os.path.dirname(folder_path))
+                except Exception as e:
+                    QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
+        else:
+            return
 
     def sort_albums(self):
         current_directory = self.parent.history_manager.current_directory()
