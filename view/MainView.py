@@ -3,8 +3,8 @@ import shutil
 import webbrowser
 
 from PyQt5.QtGui import QColor, QFont, QIcon
-from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QVBoxLayout,
-                             QWidget)
+from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QPushButton,
+                             QVBoxLayout, QWidget)
 from view.ButtonPanel import ButtonPanel
 from view.CloseConfirmationDialog import CloseConfirmationDialog
 from view.FolderList import FolderList
@@ -30,11 +30,17 @@ class MainWindow(QMainWindow):
 
         self.history_manager = HistoryManager(self)
         self.image_display = ImageDisplay(self)
+
+        # Add the delete button and connect it
+        self.delete_button = QPushButton('Delete', self.central_widget)
+        self.delete_button.clicked.connect(self.confirm_delete)
+
         self.folder_list = FolderList(self)  # Instantiate FolderList widget
         self.button_panel = ButtonPanel(self)
 
         self.layout.addWidget(self.folder_list)  # Add FolderList widget to layout
         self.layout.addWidget(self.image_display)
+        self.layout.addWidget(self.delete_button)  # Add delete button to layout
 
         self.showMaximized()
         
@@ -67,7 +73,7 @@ class MainWindow(QMainWindow):
     def open_select_method(self):
         popup = SelectMethod(self)  # Updated class name
         popup.exec_()
-    
+        
     def confirm_delete(self):
         reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
@@ -77,13 +83,11 @@ class MainWindow(QMainWindow):
                     shutil.rmtree(folder_path)
                     QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
                     # Optionally, you can update the view after deletion
-                    self.update_view(self.initial_directory)
+                    self.folder_list.load_folders_and_images(self.initial_directory)
                 except Exception as e:
                     QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
         else:
             return
-
-
 
     def open_demo(self):
         webbrowser.open("https://huggingface.co/spaces/jagruthh/cities_small")
