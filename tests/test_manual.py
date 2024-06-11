@@ -1,37 +1,49 @@
-import unittest
-from unittest.mock import patch, MagicMock
-from PyQt5.QtWidgets import QApplication, QDialog, QLineEdit, QMessageBox
+import os
+import sys
+from pathlib import Path
+from PyQt5.QtWidgets import QLineEdit, QDialog, QPushButton
+from PyQt5.QtCore import Qt
+import pytest
+from pytestqt import qtbot
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from controller.Manual import Manual
 
-class TestManual(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        # Set up the QApplication instance required for PyQt widgets
-        cls.app = QApplication([])
+def test_handle_new_album_creation_existing_file(qtbot, tmpdir):
+    initial_directory = tmpdir.mkdir("images")
+    
+    image_paths = [str(initial_directory / "image1.jpg"), str(initial_directory / "image2.png")]
+    for image_path in image_paths:
+        with open(image_path, 'w') as f:
+            f.write("dummy data")
+    
+    album_name = "New Album"
+    album_path = initial_directory / album_name
+    album_path.mkdir()
+    existing_file_path = album_path / "image1.jpg"
+    with open(existing_file_path, 'w') as f:
+        f.write("existing file")
 
-    def setUp(self):
-        # Initialize the Manual class with a dummy parent and initial directory
-        self.manual = Manual(parent=None, initial_directory="test_directory")
+    parent = QDialog()
+    parent.update_view = lambda x: None  # Mock the update_view method
+    album_dialog = QDialog()
 
-    @patch('PyQt5.QtWidgets.QMessageBox')  # Correctly patch QMessageBox
-    def test_handle_empty_album_name(self, mock_message_box):
-        # Simulate the case where the user enters an empty album name
-        album_input = MagicMock(spec=QLineEdit)
-        album_input.text.return_value = ""
+    qtbot.addWidget(parent)
+    qtbot.addWidget(album_dialog)
 
-        # Mock the QMessageBox to simulate the warning message
-        mock_message_box_instance = MagicMock()
-        mock_message_box.return_value = mock_message_box_instance
+    album_input = QLineEdit(album_dialog)
+    album_input.setText(album_name)
 
-        # Call the method to be tested
-        self.manual.handle_new_album_creation(album_input, ["image1.jpg", "image2.png"], QDialog())
-        
-        # Verify that the warning message box is shown when album name is empty
-        mock_message_box.assert_called_once()
-        mock_message_box_instance.setWindowTitle.assert_called_once_with("Error")
-        mock_message_box_instance.setText.assert_called_once_with("Album name cannot be empty.")
-        mock_message_box_instance.setStandardButtons.assert_called_once_with(QMessageBox.Ok)
-        mock_message_box_instance.exec_.assert_called_once()
+    manual_instance = Manual(parent, str(initial_directory))
+
+    manual_instance.handle_new_album_creation(album_input, image_paths, album_dialog)
+
+    assert existing_file_path.read_text() == "existing file"
+    
+    new_file_path = album_path / "image2.png"
+    assert new_file_path.exists()
+
+    qtbot.mouseClick(album_dialog.findChild(QPushButton, "Create"), Qt.LeftButton)
 
 if __name__ == '__main__':
-    unittest.main()
+    pytest.main(["-v", __file__])
