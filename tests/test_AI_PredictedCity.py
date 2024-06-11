@@ -26,7 +26,7 @@ class TestAI_PredictedCity(unittest.TestCase):
         
         # Construct the path to the test image dynamically
         script_dir = os.path.dirname(__file__)
-        test_image_path = os.path.join(script_dir, "..", "test images", "WashingtonDC_0000198_2019_06_068_38.89074697428177_-77.03347790946887_FTJ2BQ4gLzA-gewrX6tJlw.jpg") 
+        test_image_path = os.path.join(script_dir, "..", "test images", "image3.jpg") 
 
         # Ensure the image path exists before running the test
         self.assertTrue(os.path.isfile(test_image_path), f"Test image file does not exist: {test_image_path}")
@@ -34,12 +34,10 @@ class TestAI_PredictedCity(unittest.TestCase):
         # Perform classification
         prediction = ai_instance.classify_image(test_image_path)
         
-        # Get the predicted city
-        predicted_city = ai_instance.class_names[np.argmax(prediction)]
-        print(f"Predicted city: {predicted_city}")
+        print(f"Predicted city: {prediction}")
 
         # Ensure that the predicted city is in the list of class names
-        self.assertIn(predicted_city, ai_instance.class_names, f"The predicted city '{predicted_city}' is not in the list of expected cities.")
+        self.assertIn(prediction, ai_instance.class_names, f"The predicted city '{prediction}' is not in the list of expected cities.")
     
     @classmethod
     def tearDownClass(cls):
