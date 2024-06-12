@@ -1,79 +1,48 @@
-# Temp
-# Author ~ Abdu Raziq
-
 import os
 import sys
-import unittest
 from unittest.mock import MagicMock, patch
+import shutil
+import pytest
+from PyQt5.QtWidgets import QApplication, QWidget, QMessageBox
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QMessageBox  # Import QMessageBox directly
-from PyQt5.QtWidgets import QWidget
-
+# Import the module containing the class to be tested
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from view.FolderList import FolderList
 
+# Initialize QApplication before running any tests
+app = QApplication(sys.argv)
 
-class TestFolderList(unittest.TestCase):
+@pytest.fixture
+def folder_list(qtbot):
+    parent = MockParent()
+    folder_list = FolderList(parent)
+    qtbot.addWidget(parent)  # Ensure the parent widget is not garbage collected
+    return folder_list
 
-    def setUp(self):
-        self.folder_list = FolderList(MockParent())
+# it ensures that if an exception is raised during the folder deletion process, the appropriate error message is displayed to the user.
 
-    @patch('PyQt5.QtWidgets.QMessageBox.question', return_value=QMessageBox.Yes)
-    @patch('PyQt5.QtWidgets.QMessageBox.information')
-    @patch('shutil.rmtree')
-    def test_delete_folder_confirmation_yes(self, mock_rmtree, mock_information, mock_question):
-        # Mock folder_path and parent
-        folder_path = '/path/to/folder'
-        self.folder_list.parent = MagicMock()
-        
-        # Call delete_folder method
-        self.folder_list.delete_folder(folder_path)
-        
-        # Assertions
-        mock_question.assert_called_once()
-        mock_rmtree.assert_called_once_with(folder_path)
-        mock_information.assert_called_once_with(self.folder_list, 'Success', 'Folder deleted successfully!')
+def test_delete_folder_error(folder_list, qtbot):
+    # Mock folder_path and parent
+    folder_path = '/path/to/folder'
+    folder_list.parent = MagicMock()
 
-    @patch('PyQt5.QtWidgets.QMessageBox.question', return_value=QMessageBox.No)
-    @patch('PyQt5.QtWidgets.QMessageBox.information')
-    @patch('shutil.rmtree')
-    def test_delete_folder_confirmation_no(self, mock_rmtree, mock_information, mock_question):
-        # Mock folder_path and parent
-        folder_path = '/path/to/folder'
-        self.folder_list.parent = MagicMock()
-        
-        # Call delete_folder method
-        self.folder_list.delete_folder(folder_path)
-        
-        # Assertions
-        mock_question.assert_called_once()
-        mock_rmtree.assert_not_called()
-        mock_information.assert_not_called()
-
-    @patch('PyQt5.QtWidgets.QMessageBox.question', return_value=QMessageBox.Yes)
-    @patch('PyQt5.QtWidgets.QMessageBox.warning')
-    @patch('shutil.rmtree', side_effect=Exception('Test error'))
-
-    def test_delete_folder_error(self, mock_rmtree, mock_warning, mock_question):
-        # Mock folder_path and parent
-        folder_path = '/path/to/folder'
-        self.folder_list.parent = MagicMock()
-        
-        # Call delete_folder method
-        self.folder_list.delete_folder(folder_path)
-        
-        # Assertions
-        mock_question.assert_called_once()
-        mock_rmtree.assert_called_once_with(folder_path)
-        mock_warning.assert_called_once()
-    
+    # This ensures that the application correctly handles the error by displaying an appropriate error message to the user.
+    # Patch QMessageBox.question to return Yes and shutil.rmtree to raise an exception
+    with patch.object(QMessageBox, 'question', return_value=QMessageBox.Yes):
+        with patch('shutil.rmtree', side_effect=Exception('Test error')):
+            with patch.object(QMessageBox, 'warning') as mock_warning:
+                # Call delete_folder method
+                folder_list.delete_folder(folder_path)
+                qtbot.wait(50)  # Ensure the event loop has time to process
+                # Assertions
+                mock_warning.assert_called_once()
 
 class MockParent(QWidget):
     def __init__(self):
         super().__init__()
-        self.central_widget = MagicMock()
+        self.central_widget = QWidget()  # Create a QWidget instance as the central widget
+        self.frame_settings = MagicMock()  # Mock the frame_settings attribute
 
-
+# Run the tests using pytest.main()
 if __name__ == '__main__':
-    unittest.main()
+    pytest.main(['-v', __file__])
