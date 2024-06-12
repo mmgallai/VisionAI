@@ -134,9 +134,18 @@ VisionAI/
 └── README.md
 
 ```
+- app.py: The main entry point for the application.
 
 ## Burndown Chart
 ![Burndown Chart](https://i.ibb.co/9TLgm7g/Sprint-burndown.png)
+
+## Technologies Used
+- <img src="https://img.icons8.com/color/48/000000/python.png" alt="Python" width="48" height="48"> **Python**: The primary programming language used for this project.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Python_and_Qt.svg" alt="PyQt5" width="48" height="48"> **PyQt5**: Used for creating the graphical user interface.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Open_Neural_Network_Exchange_logo.svg" alt="ONNX" width="48" height="48"> **ONNX**: Used for the machine learning models.
+- <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Pytest_logo.svg" alt="pytest" width="48" height="48"> **pytest**: Used for testing the application.
+- <img src="https://img.icons8.com/fluent/48/000000/github.png" alt="GitHub" width="48" height="48"> **GitHub**: For version control and collaboration.
+
 
 ## Contributing
 
@@ -152,4 +161,5 @@ This project is licensed under the MIT License.
 - This project uses [YOLOv8](https://github.com/ultralytics/ultralytics) to organize images.
 - Special thanks to user "[amaralibey](https://www.kaggle.com/amaralibey)" in kaggle for the datatset.
 - Special thanks to the contributors and the open-source community for their support.
+
 
