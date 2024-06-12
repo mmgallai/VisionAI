@@ -13,11 +13,8 @@ class FolderList(QListWidget):
         self.parent = parent
         self.setStyleSheet("background-color: #2b2b2b; color: white;")
         self.parent.frame_settings.layout.addWidget(self, 1, 0)
-        self.itemClicked.connect(self.on_folder_selected)
+        self.itemDoubleClicked.connect(self.on_folder_double_clicked)
         self.selected_folder_path = None  # Initialize selected_folder_path attribute
-
-        # Connect delete button to confirm_delete_folder method
-        self.parent.delete_button.clicked.connect(self.confirm_delete_folder)
 
     def load_folders_and_images(self, directory, sort=False):
         self.clear()
@@ -44,10 +41,11 @@ class FolderList(QListWidget):
             list_item.setData(Qt.UserRole, image_path)
             self.addItem(list_item)
 
-    def on_folder_selected(self, item):
+    def on_folder_double_clicked(self, item):
         item_path = item.data(Qt.UserRole)
         if os.path.isdir(item_path):
             self.selected_folder_path = item_path  # Update selected_folder_path
+            self.parent.update_view(item_path)  # Call update_view on parent to show contents
 
     def select_folder(self):
         folder_path = QFileDialog.getExistingDirectory(self.parent, "Select Folder")
@@ -59,11 +57,20 @@ class FolderList(QListWidget):
             self.parent.update_path_label(folder_path)
             self.parent.update_image_count_label(folder_path)
 
-    def confirm_delete_folder(self):
-        if self.selected_folder_path:
-            self.parent.confirm_delete()
+    def delete_folder(self, folder_path):
+        reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?',
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            if folder_path:
+                try:
+                    shutil.rmtree(folder_path)
+                    QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
+                    # Optionally, you can update the view after deletion
+                    self.load_folders_and_images(os.path.dirname(folder_path))
+                except Exception as e:
+                    QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
         else:
-            QMessageBox.information(self, 'Info', 'No folder selected to delete.')
+            return
 
     def sort_albums(self):
         current_directory = self.parent.history_manager.current_directory()
