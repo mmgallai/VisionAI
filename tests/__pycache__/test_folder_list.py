@@ -71,8 +71,4 @@ class MockParent(QWidget):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     unittest.main()
-=======
-    unittest.main()
->>>>>>> b418746cae217ffef24732953a071374e094a1da
