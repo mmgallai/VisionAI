@@ -1,16 +1,14 @@
 import os
 import sys
-from pathlib import Path
-
 import pytest
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QDialog, QLineEdit, QPushButton
+from pathlib import Path
 from pytestqt import qtbot
 
 # Add the project root to the sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from controller.Manual import Manual
-
 
 def test_handle_new_album_creation_existing_file(qtbot, tmpdir):
     initial_directory = Path(tmpdir.mkdir("images"))
@@ -47,4 +45,4 @@ def test_handle_new_album_creation_existing_file(qtbot, tmpdir):
     qtbot.mouseClick(album_dialog.findChild(QPushButton, "Create"), Qt.LeftButton)
 
 if __name__ == '__main__':
-    pytest.main(["-v", __file__])
+    pytest.main(["-v", __file__]) # Not unittest.main()
