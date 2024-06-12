@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout
-from PyQt5.QtWidgets import QStyle
-from PyQt5.QtCore import Qt
-from view.FrameSettings import FrameSettings
-from view.IconButton import IconButton
-from view.UploadButton import UploadButton
-from view.DemoButton import DemoButton
-=======
 import os
 import shutil
 import webbrowser
@@ -25,28 +15,18 @@ from view.InformationDialog import \
     InformationDialog  # Import InformationDialog
 from view.SelectMethod import SelectMethod
 
->>>>>>> code-review
 
 class MainWindow(QMainWindow):
     def __init__(self, initial_folder):
         super().__init__()
-<<<<<<< HEAD
-        self.setWindowTitle("Vision AI")
-=======
         self.setWindowTitle("VisionAI")
         self.setGeometry(100, 100, 1200, 800)
->>>>>>> code-review
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
         self.layout = QVBoxLayout(self.central_widget)
         self.frame_settings = FrameSettings(self.central_widget, color=QColor(30, 30, 30))
         self.layout.addLayout(self.frame_settings.layout)
-<<<<<<< HEAD
-        
-        self.create_icon_button()
-        self.create_upload_and_demo_buttons()
-=======
 
         self.history_manager = HistoryManager(self)
         self.image_display = ImageDisplay(self)
@@ -57,7 +37,6 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.folder_list)  # Add FolderList widget to layout
         self.layout.addWidget(self.image_display)
 
->>>>>>> code-review
         self.showMaximized()
         
         self.initial_directory = initial_folder  # Store the initial directory
@@ -66,25 +45,12 @@ class MainWindow(QMainWindow):
         # Set the default font for all widgets in the main window
         self.set_font_for_all_widgets(self, "Consolas", 12)
 
-<<<<<<< HEAD
-    def create_upload_and_demo_buttons(self):
-        button_layout = QHBoxLayout()
-        
-        upload_button = UploadButton(self.central_widget)
-        demo_button = DemoButton(self.central_widget)
-        
-        button_layout.addWidget(upload_button)
-        button_layout.addWidget(demo_button)
-        
-        self.frame_settings.layout.addLayout(button_layout, 1, 0, alignment=Qt.AlignBottom | Qt.AlignHCenter)
-=======
     def set_font_for_all_widgets(self, widget, font_family, font_size):
         font = QFont(font_family, font_size)
         widget.setFont(font)
         for child in widget.children():
             if isinstance(child, QWidget):
                 self.set_font_for_all_widgets(child, font_family, font_size)
->>>>>>> code-review
 
     def update_view(self, folder_path):
         self.history_manager.update_history(folder_path)
