@@ -3,8 +3,8 @@ import shutil
 import webbrowser
 
 from PyQt5.QtGui import QColor, QFont, QIcon
-from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QPushButton,
-                             QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QVBoxLayout,
+                             QWidget)
 from view.ButtonPanel import ButtonPanel
 from view.CloseConfirmationDialog import CloseConfirmationDialog
 from view.FolderList import FolderList
@@ -31,16 +31,11 @@ class MainWindow(QMainWindow):
         self.history_manager = HistoryManager(self)
         self.image_display = ImageDisplay(self)
 
-        # Add the delete button and connect it
-        self.delete_button = QPushButton('Delete', self.central_widget)
-        self.delete_button.clicked.connect(self.confirm_delete)
-
         self.folder_list = FolderList(self)  # Instantiate FolderList widget
         self.button_panel = ButtonPanel(self)
 
         self.layout.addWidget(self.folder_list)  # Add FolderList widget to layout
         self.layout.addWidget(self.image_display)
-        self.layout.addWidget(self.delete_button)  # Add delete button to layout
 
         self.showMaximized()
         
