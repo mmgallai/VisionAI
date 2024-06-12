@@ -48,6 +48,7 @@ class TestFolderList(unittest.TestCase):
     @patch('PyQt5.QtWidgets.QMessageBox.question', return_value=QMessageBox.Yes)
     @patch('PyQt5.QtWidgets.QMessageBox.warning')
     @patch('shutil.rmtree', side_effect=Exception('Test error'))
+
     def test_delete_folder_error(self, mock_rmtree, mock_warning, mock_question):
         # Mock folder_path and parent
         folder_path = '/path/to/folder'
@@ -71,8 +72,4 @@ class MockParent(QWidget):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     unittest.main()
-=======
-    unittest.main()
->>>>>>> b418746cae217ffef24732953a071374e094a1da
