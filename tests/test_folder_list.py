@@ -1,10 +1,13 @@
 import os
+import sys
 import unittest
 from unittest.mock import MagicMock, patch
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMessageBox  # Import QMessageBox directly
 from PyQt5.QtWidgets import QWidget
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from view.FolderList import FolderList
 
 
@@ -67,8 +70,6 @@ class MockParent(QWidget):
     def __init__(self):
         super().__init__()
         self.central_widget = MagicMock()
-
-
 
 
 if __name__ == '__main__':

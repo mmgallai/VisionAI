@@ -3,8 +3,8 @@ import shutil
 import webbrowser
 
 from PyQt5.QtGui import QColor, QFont, QIcon
-from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QPushButton,
-                             QVBoxLayout, QWidget)
+from PyQt5.QtWidgets import (QDialog, QMainWindow, QMessageBox, QVBoxLayout,
+                             QWidget)
 from view.ButtonPanel import ButtonPanel
 from view.CloseConfirmationDialog import CloseConfirmationDialog
 from view.FolderList import FolderList
