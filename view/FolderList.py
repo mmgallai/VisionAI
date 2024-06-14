@@ -4,9 +4,9 @@ import shutil
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QFileDialog, QListWidget, QListWidgetItem,
-                             QMessageBox)
+                             QMessageBox, QDialog)
 
-
+from view.DeleteConfirmationDialog import DeleteConfirmationDialog
 class FolderList(QListWidget):
     def __init__(self, parent):
         super().__init__(parent.central_widget)
@@ -58,9 +58,8 @@ class FolderList(QListWidget):
             self.parent.update_image_count_label(folder_path)
 
     def delete_folder(self, folder_path):
-        reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        dialog = DeleteConfirmationDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
             if folder_path:
                 try:
                     shutil.rmtree(folder_path)

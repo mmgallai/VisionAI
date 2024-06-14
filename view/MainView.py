@@ -14,6 +14,7 @@ from view.ImageDisplay import ImageDisplay
 from view.InformationDialog import \
     InformationDialog  # Import InformationDialog
 from view.SelectMethod import SelectMethod
+from view.DeleteConfirmationDialog import DeleteConfirmationDialog
 
 
 class MainWindow(QMainWindow):
@@ -70,8 +71,8 @@ class MainWindow(QMainWindow):
         popup.exec_()
         
     def confirm_delete(self):
-        reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        dialog = DeleteConfirmationDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
             folder_path = self.folder_list.selected_folder_path
             if folder_path:
                 try:

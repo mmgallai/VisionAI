@@ -37,8 +37,8 @@ class ButtonPanel:
         self.add_button_with_label("Select Method", "icons/method_icon.png", self.parent.open_select_method)
         self.add_button_with_label("Web Demo", "icons/demo_icon.png", self.parent.open_demo)
         self.add_button_with_label("Sort", "icons/sort_icon.png", self.parent.folder_list.sort_albums)
-        self.add_button_with_label("Information", "icons/info_icon.png", self.parent.show_information)
         self.add_button_with_label("Delete", "icons/delete_icon.png", self.parent.confirm_delete)
+        self.add_button_with_label("Information", "icons/info_icon.png", self.parent.show_information)
         self.layout.addStretch()
 
     def add_button_with_label(self, text, icon_path, callback):
