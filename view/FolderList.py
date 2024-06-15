@@ -4,7 +4,7 @@ import shutil
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QFileDialog, QListWidget, QListWidgetItem,
-                             QMessageBox, QDialog)
+                             QMessageBox, QDialog, QInputDialog, QMenu)
 
 from view.DeleteConfirmationDialog import DeleteConfirmationDialog
 class FolderList(QListWidget):
@@ -74,3 +74,31 @@ class FolderList(QListWidget):
     def sort_albums(self):
         current_directory = self.parent.history_manager.current_directory()
         self.load_folders_and_images(current_directory, sort=True)
+
+    def contextMenuEvent(self, event):
+        # Get the item at the clicked position
+        item = self.itemAt(event.pos())
+        if item:
+            context_menu = QMenu(self)
+            rename_action = context_menu.addAction("Rename Folder")
+            rename_action.triggered.connect(lambda: self.rename_folder(item))
+            context_menu.exec_(event.globalPos())
+
+    def rename_folder(self, item):
+        folder_path = item.data(Qt.UserRole)
+        if os.path.isdir(folder_path):
+            new_name, ok = QInputDialog.getText(self, 'Rename Folder', 'Enter new folder name:')
+            if ok and new_name:
+                new_folder_path = os.path.join(os.path.dirname(folder_path), new_name)
+                try:
+                    os.rename(folder_path, new_folder_path)
+                    QMessageBox.information(self, 'Success', 'Folder renamed successfully!')
+                    
+                    # Update the folder list to reflect the new name
+                    self.load_folders_and_images(os.path.dirname(new_folder_path))
+                except Exception as e:
+                    QMessageBox.warning(self, 'Error', f'An error occurred while renaming the folder: {str(e)}')
+        else:
+            QMessageBox.warning(self, 'Error', 'Selected item is not a folder.')    
+
+    
