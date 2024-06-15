@@ -70,20 +70,27 @@ class MainWindow(QMainWindow):
         popup = SelectMethod(self)  # Updated class name
         popup.exec_()
         
-    def confirm_delete(self):
-        dialog = DeleteConfirmationDialog(self)
-        if dialog.exec_() == QDialog.Accepted:
+    def confirm_delete(self, folder_path=None):
+        if not folder_path:
             folder_path = self.folder_list.selected_folder_path
-            if folder_path:
-                try:
-                    shutil.rmtree(folder_path)
-                    QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
-                    # Optionally, you can update the view after deletion
-                    self.folder_list.load_folders_and_images(self.initial_directory)
-                except Exception as e:
-                    QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
+
+        if folder_path:
+            dialog = DeleteConfirmationDialog(self)
+            if dialog.exec_() == QDialog.Accepted:
+                if os.path.isdir(folder_path):
+                    try:
+                        shutil.rmtree(folder_path)
+                        QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
+                        # Update the view after deletion
+                        parent_folder = os.path.dirname(folder_path)
+                        self.folder_list.load_folders_and_images(parent_folder)
+                        self.update_view(parent_folder)
+                    except Exception as e:
+                        QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
+                else:
+                    QMessageBox.warning(self, 'Error', 'Selected item is not a folder.')
         else:
-            return
+            QMessageBox.warning(self, 'Error', 'No folder selected.')
 
     def open_demo(self):
         webbrowser.open("https://huggingface.co/spaces/jagruthh/cities_small")
