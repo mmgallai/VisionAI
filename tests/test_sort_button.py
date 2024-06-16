@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
-
 # Mock classes to represent the application structure
 class FolderList:
     def __init__(self):
@@ -79,8 +78,6 @@ class TestSortButton(unittest.TestCase):
 
         self.assertEqual(self.folder_list.folders, expected_folders)
         self.assertEqual(self.folder_list.images, expected_images)
-
-
 
     def test_sort_empty_name(self):
         # Additional test case for handling empty folder/image names
