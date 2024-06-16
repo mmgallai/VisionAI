@@ -10,7 +10,7 @@ if __name__ == "__main__":
     if initial_folder_dialog.exec_() == QDialog.Accepted:
         selected_folder = initial_folder_dialog.selected_folder
         window = MainWindow(initial_folder=selected_folder)
-        window.show()
+        window.show() 
         sys.exit(app.exec_())
     else:
         sys.exit(0)

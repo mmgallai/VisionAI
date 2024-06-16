@@ -4,9 +4,9 @@ import shutil
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (QFileDialog, QListWidget, QListWidgetItem,
-                             QMessageBox, QInputDialog, QMenu)
+                             QMessageBox, QDialog, QInputDialog, QMenu, QAction)
 
-
+from view.DeleteConfirmationDialog import DeleteConfirmationDialog
 class FolderList(QListWidget):
     def __init__(self, parent):
         super().__init__(parent.central_widget)
@@ -58,14 +58,13 @@ class FolderList(QListWidget):
             self.parent.update_image_count_label(folder_path)
 
     def delete_folder(self, folder_path):
-        reply = QMessageBox.question(self, 'Confirmation', 'Are you sure you want to delete the album folder?',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        dialog = DeleteConfirmationDialog(self)
+        if dialog.exec_() == QDialog.Accepted:
             if folder_path:
                 try:
                     shutil.rmtree(folder_path)
                     QMessageBox.information(self, 'Success', 'Folder deleted successfully!')
-                    # Optionally, you can update the view after deletion
+                    # Update the view after deletion
                     self.load_folders_and_images(os.path.dirname(folder_path))
                 except Exception as e:
                     QMessageBox.warning(self, 'Error', f'An error occurred while deleting the folder: {str(e)}')
@@ -77,13 +76,27 @@ class FolderList(QListWidget):
         self.load_folders_and_images(current_directory, sort=True)
 
     def contextMenuEvent(self, event):
-        # Get the item at the clicked position
         item = self.itemAt(event.pos())
         if item:
             context_menu = QMenu(self)
-            rename_action = context_menu.addAction("Rename Folder")
+            
+            rename_action = QAction("Rename Folder", self)
             rename_action.triggered.connect(lambda: self.rename_folder(item))
+            
+            delete_action = QAction("Delete Folder", self)
+            delete_action.triggered.connect(lambda: self.delete_folder_from_context_menu(item))
+            
+            context_menu.addAction(rename_action)
+            context_menu.addAction(delete_action)
+            
             context_menu.exec_(event.globalPos())
+
+    def delete_folder_from_context_menu(self, item):
+            folder_path = item.data(Qt.UserRole)
+            if os.path.isdir(folder_path):
+                self.parent.confirm_delete(folder_path)
+            else:
+                QMessageBox.warning(self, 'Error', 'Selected item is not a folder.')
 
     def rename_folder(self, item):
         folder_path = item.data(Qt.UserRole)
@@ -101,5 +114,11 @@ class FolderList(QListWidget):
                     QMessageBox.warning(self, 'Error', f'An error occurred while renaming the folder: {str(e)}')
         else:
             QMessageBox.warning(self, 'Error', 'Selected item is not a folder.')    
+
+    def mousePressEvent(self, event):
+        super().mousePressEvent(event)
+        item = self.itemAt(event.pos())
+        if item:
+            self.selected_folder_path = item.data(Qt.UserRole)
 
     
