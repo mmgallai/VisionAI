@@ -17,9 +17,17 @@ class FolderList:
     def add_image(self, image_name):
         self.images.append(image_name)
 
-    def sort_folders(self):
-        self.folders.sort()
-        self.images.sort()
+    def sort_folders(self, order="ascending", case_sensitive=True):
+        if not case_sensitive:
+            self.folders.sort(key=lambda x: x.lower())
+            self.images.sort(key=lambda x: x.lower())
+        else:
+            self.folders.sort()
+            self.images.sort()
+
+        if order == "descending":
+            self.folders.reverse()
+            self.images.reverse()
 
 class ButtonPanel:
     def __init__(self, parent):
@@ -32,8 +40,11 @@ class MainWindow(QMainWindow):
         self.button_panel = ButtonPanel(self)
 
 class TestSortButton(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.app = QApplication(sys.argv)
+
     def setUp(self):
-        self.app = QApplication(sys.argv)
         self.main_window = MainWindow()
         self.button_panel = self.main_window.button_panel
         self.folder_list = self.main_window.folder_list
@@ -46,9 +57,6 @@ class TestSortButton(unittest.TestCase):
         self.folder_list.add_image('ImageA.jpg')
         self.folder_list.add_image('ImageB.jpg')
 
-    def tearDown(self):
-        self.app.quit()
-
     def test_sort_button(self):
         # Simulate a click on the sort button
         self.folder_list.sort_folders()
@@ -56,6 +64,32 @@ class TestSortButton(unittest.TestCase):
         # Check if folders and images are sorted
         expected_folders = ['FolderA', 'FolderB', 'FolderC']
         expected_images = ['ImageA.jpg', 'ImageB.jpg', 'ImageC.jpg']
+
+        self.assertEqual(self.folder_list.folders, expected_folders)
+        self.assertEqual(self.folder_list.images, expected_images)
+
+    def test_sort_ascending(self):
+        # Additional test case for ascending order sorting
+        self.folder_list.add_folder('')
+        self.folder_list.add_image('')
+        self.folder_list.sort_folders(order="ascending")
+
+        expected_folders = ['', 'FolderA', 'FolderB', 'FolderC']
+        expected_images = ['', 'ImageA.jpg', 'ImageB.jpg', 'ImageC.jpg']
+
+        self.assertEqual(self.folder_list.folders, expected_folders)
+        self.assertEqual(self.folder_list.images, expected_images)
+
+
+
+    def test_sort_empty_name(self):
+        # Additional test case for handling empty folder/image names
+        self.folder_list.add_folder('')
+        self.folder_list.add_image('')
+        self.folder_list.sort_folders(order="ascending")
+
+        expected_folders = ['', 'FolderA', 'FolderB', 'FolderC']
+        expected_images = ['', 'ImageA.jpg', 'ImageB.jpg', 'ImageC.jpg']
 
         self.assertEqual(self.folder_list.folders, expected_folders)
         self.assertEqual(self.folder_list.images, expected_images)
