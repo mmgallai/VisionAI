@@ -48,8 +48,11 @@ RUN apt-get update && apt-get install -y \
     libgdk-pixbuf2.0-0 \
     libpango-1.0-0 \
     libgdk-pixbuf2.0-dev \
-    qt5-default \
-    && rm -rf /var/lib/apt/lists/*
+    qtbase5-dev \
+    qtbase5-dev-tools \
+    qt5-qmake \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Copy the requirements file into the container
 COPY requirements.txt .
