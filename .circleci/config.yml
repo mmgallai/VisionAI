@@ -19,10 +19,50 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
       - run:
-          name: Run tests
+          name: Run test_AI_NumberOfOutputs
           command: |
             . venv/bin/activate
-            python -m unittest discover -s tests
+            python -m unittest tests.test_AI_NumberOfOutputs
+      - run:
+          name: Run test_AI_PredictedCity
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_AI_PredictedCity
+      - run:
+          name: Run test_AI_Preprocessing
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_AI_Preprocessing
+      - run:
+          name: Run test_ButtonPanel
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_ButtonPanel
+      - run:
+          name: Run test_IconsExist
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_IconsExist
+      - run:
+          name: Run test_InformationDialog
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_InformationDialog
+      - run:
+          name: Run test_ModelExist
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_ModelExist
+      - run:
+          name: Run test_SelectMethod
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_SelectMethod
+      - run:
+          name: Run test_sort_button
+          command: |
+            . venv/bin/activate
+            python -m unittest tests.test_sort_button
 
   build_and_push:
     docker:
@@ -44,7 +84,15 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - test
+      - test:
+          filters:
+            branches:
+              only:
+                - main
       - build_and_push:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - main
