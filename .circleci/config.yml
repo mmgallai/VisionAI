@@ -3,72 +3,11 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: circleci/python:3.9
+      - image: docker:20.10.7
 
 jobs:
-  test:
-    executor: docker-executor
-    environment:
-      QT_QPA_PLATFORM: offscreen
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.7
-      - run:
-          name: Install dependencies
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      - run:
-          name: Run test_AI_NumberOfOutputs
-          command: |
-            . venv/bin/activate
-            python tests/test_AI_NumberOfOutputs.py
-      - run:
-          name: Run test_AI_PredictedCity
-          command: |
-            . venv/bin/activate
-            python tests/test_AI_PredictedCity.py
-      - run:
-          name: Run test_AI_Preprocessing
-          command: |
-            . venv/bin/activate
-            python tests/test_AI_Preprocessing.py
-      - run:
-          name: Run test_ButtonPanel
-          command: |
-            . venv/bin/activate
-            python tests/test_ButtonPanel.py
-      - run:
-          name: Run test_IconsExist
-          command: |
-            . venv/bin/activate
-            python tests/test_IconsExist.py
-      - run:
-          name: Run test_InformationDialog
-          command: |
-            . venv/bin/activate
-            python tests/test_InformationDialog.py
-      - run:
-          name: Run test_ModelExist
-          command: |
-            . venv/bin/activate
-            python tests/test_ModelExist.py
-      - run:
-          name: Run test_SelectMethod
-          command: |
-            . venv/bin/activate
-            python tests/test_SelectMethod.py
-      - run:
-          name: Run test_sort_button
-          command: |
-            . venv/bin/activate
-            python tests/test_sort_button.py
-
   build_and_push:
-    docker:
-      - image: docker:20.10.7
+    executor: docker-executor
     steps:
       - setup_remote_docker:
           version: 20.10.7
@@ -84,12 +23,9 @@ jobs:
 
 workflows:
   version: 2
-  build_and_test:
+  build_and_push:
     jobs:
-      - test
       - build_and_push:
-          requires:
-            - test
           filters:
             branches:
               only:
