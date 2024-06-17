@@ -4,10 +4,7 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Configure APT to skip the problematic Post-Invoke script
-RUN echo 'DPkg::Post-Invoke {"rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true";};' > /etc/apt/apt.conf.d/no-cache
-
-# Update package repositories and install necessary libraries for PyQt5 and OpenGL
+# Install necessary libraries for PyQt5 and OpenGL
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
@@ -43,25 +40,7 @@ RUN apt-get update && apt-get install -y \
     libxtst6 \
     libxss1 \
     libxxf86vm1 \
-    libdbus-1-3 \
-    libxcb-render0 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcairo2 \
-    libgdk-pixbuf2.0-0 \
-    libpango-1.0-0 \
-    libgdk-pixbuf2.0-dev \
-    qtbase5-dev \
-    qtbase5-dev-tools \
-    qt5-qmake \
     && rm -rf /var/lib/apt/lists/*
-
-# Set environment variables for Qt to use offscreen platform
-ENV QT_QPA_PLATFORM=offscreen
-ENV XDG_RUNTIME_DIR=/tmp/runtime-root
-
-# Create the runtime directory
-RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
 
 # Copy the requirements file into the container
 COPY requirements.txt .
@@ -71,6 +50,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project directory contents into the container
 COPY . .
+
+# Set environment variables for Qt to use offscreen platform
+ENV QT_QPA_PLATFORM offscreen
+ENV XDG_RUNTIME_DIR /tmp/runtime-root
+
+# Create the runtime directory
+RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
 
 # Specify the command to run the application
 CMD ["python", "./app.py"]
