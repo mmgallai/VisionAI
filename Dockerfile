@@ -4,8 +4,9 @@ FROM python:3.10-slim
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Install necessary libraries for PyQt5 and OpenGL
-RUN apt-get update && apt-get install -y \
+# Update the package list and install necessary libraries for PyQt5 and OpenGL
+RUN apt-get update
+RUN apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libxkbcommon-x11-0 \
@@ -39,13 +40,13 @@ RUN apt-get update && apt-get install -y \
     libxfixes3 \
     libxtst6 \
     libxss1 \
-    libxxf86vm1 \
-    && rm -rf /var/lib/apt/lists/*
+    libxxf86vm1
+
+# Remove package lists to save space
+RUN rm -rf /var/lib/apt/lists/*
 
 # Set environment variables for Qt to use offscreen platform
 ENV QT_QPA_PLATFORM=offscreen
-
-# Create the runtime directory
 ENV XDG_RUNTIME_DIR=/tmp/runtime-root
 RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
 
@@ -57,13 +58,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project directory contents into the container
 COPY . /usr/src/app/
-
-# Set environment variables for Qt to use offscreen platform
-ENV QT_QPA_PLATFORM offscreen
-ENV XDG_RUNTIME_DIR /tmp/runtime-root
-
-# Create the runtime directory
-RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
 
 # Specify the command to run the application
 CMD ["python", "./app.py"]
