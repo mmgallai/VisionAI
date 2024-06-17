@@ -42,6 +42,13 @@ RUN apt-get update && apt-get install -y \
     libxxf86vm1 \
     && rm -rf /var/lib/apt/lists/*
 
+# Set environment variables for Qt to use offscreen platform
+ENV QT_QPA_PLATFORM=offscreen
+
+# Create the runtime directory
+ENV XDG_RUNTIME_DIR=/tmp/runtime-root
+RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
+
 # Copy the requirements file into the container
 COPY requirements.txt .
 
