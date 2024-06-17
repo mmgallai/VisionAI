@@ -4,8 +4,8 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install necessary libraries for PyQt5 and OpenGL in one RUN command
-RUN apt-get update && apt-get install -y \
+# Install necessary libraries for PyQt5 and OpenGL with --fix-missing flag
+RUN apt-get update --fix-missing && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libxkbcommon-x11-0 \
@@ -15,12 +15,11 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file and install dependencies in one step to leverage Docker layer caching
+# Copy the requirements file into the container at /app
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
-COPY . .
+# Install the dependencies specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
