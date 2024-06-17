@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
     libxkbcommon-x11-0 \
     libx11-xcb1 \
     libxcb-glx0 \
-    libxcb-keysyms1 \
-    && rm -rf /var/lib/apt/lists/*
+    libxcb-keysyms1 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set environment variables for Qt to use offscreen platform
 ENV QT_QPA_PLATFORM=offscreen
