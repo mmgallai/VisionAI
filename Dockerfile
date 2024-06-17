@@ -50,9 +50,7 @@ RUN apt-get update && apt-get install -y \
     libgdk-pixbuf2.0-dev \
     qtbase5-dev \
     qtbase5-dev-tools \
-    qt5-qmake \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get clean
+    qt5-qmake
 
 # Copy the requirements file into the container
 COPY requirements.txt .
