@@ -11,7 +11,10 @@ class AI:
     def __init__(self, parent, initial_directory):
         self.parent = parent
         self.initial_directory = initial_directory 
-        self.model_path = os.path.join('model', 'best.onnx')
+        
+        # Construct model path relative to the current script's location
+        self.model_path = os.path.join(os.path.dirname(__file__), '..', 'model', 'best.onnx')
+        
         self.session = ort.InferenceSession(self.model_path)
         self.input_name = self.session.get_inputs()[0].name
         self.input_shape = self.session.get_inputs()[0].shape
