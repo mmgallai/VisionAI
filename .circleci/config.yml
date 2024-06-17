@@ -19,10 +19,50 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
       - run:
-          name: Run tests
+          name: Run test_AI_NumberOfOutputs
           command: |
             . venv/bin/activate
-            python -m unittest discover -s tests
+            python tests/test_AI_NumberOfOutputs.py
+      - run:
+          name: Run test_AI_PredictedCity
+          command: |
+            . venv/bin/activate
+            python tests/test_AI_PredictedCity.py
+      - run:
+          name: Run test_AI_Preprocessing
+          command: |
+            . venv/bin/activate
+            python tests/test_AI_Preprocessing.py
+      - run:
+          name: Run test_ButtonPanel
+          command: |
+            . venv/bin/activate
+            python tests/test_ButtonPanel.py
+      - run:
+          name: Run test_IconsExist
+          command: |
+            . venv/bin/activate
+            python tests/test_IconsExist.py
+      - run:
+          name: Run test_InformationDialog
+          command: |
+            . venv/bin/activate
+            python tests/test_InformationDialog.py
+      - run:
+          name: Run test_ModelExist
+          command: |
+            . venv/bin/activate
+            python tests/test_ModelExist.py
+      - run:
+          name: Run test_SelectMethod
+          command: |
+            . venv/bin/activate
+            python tests/test_SelectMethod.py
+      - run:
+          name: Run test_sort_button
+          command: |
+            . venv/bin/activate
+            python tests/test_sort_button.py
 
   build_and_push:
     docker:
