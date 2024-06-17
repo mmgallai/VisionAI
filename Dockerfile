@@ -60,8 +60,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set environment variables for Qt to use offscreen platform
-ENV QT_QPA_PLATFORM offscreen
-ENV XDG_RUNTIME_DIR /tmp/runtime-root
+ENV QT_QPA_PLATFORM=offscreen
+ENV XDG_RUNTIME_DIR=/tmp/runtime-root
 
 # Create the runtime directory
 RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
