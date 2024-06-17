@@ -3,66 +3,10 @@ version: 2.1
 executors:
   docker-executor:
     docker:
-      - image: mgallai/vision_ai:latest
+      - image: circleci/python:3.9
 
 jobs:
-  test:
-    executor: docker-executor
-    steps:
-      - checkout
-      - run:
-          name: Install dependencies
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-      - run:
-          name: Run test_AI_NumberOfOutputs
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_AI_NumberOfOutputs
-      - run:
-          name: Run test_AI_PredictedCity
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_AI_PredictedCity
-      - run:
-          name: Run test_AI_Preprocessing
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_AI_Preprocessing
-      - run:
-          name: Run test_ButtonPanel
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_ButtonPanel
-      - run:
-          name: Run test_IconsExist
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_IconsExist
-      - run:
-          name: Run test_InformationDialog
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_InformationDialog
-      - run:
-          name: Run test_ModelExist
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_ModelExist
-      - run:
-          name: Run test_SelectMethod
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_SelectMethod
-      - run:
-          name: Run test_sort_button
-          command: |
-            . venv/bin/activate
-            python -m unittest tests.test_sort_button
-
-  build_and_push:
+  build_image:
     docker:
       - image: docker:20.10.7
     steps:
@@ -78,18 +22,76 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
             docker push mgallai/vision_ai:latest
 
+  test:
+    executor: docker-executor
+    steps:
+      - checkout
+      - run:
+          name: Pull Docker image
+          command: docker pull mgallai/vision_ai:latest
+      - run:
+          name: Install dependencies
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c "python -m venv venv && . venv/bin/activate && pip install -r requirements.txt"
+      - run:
+          name: Run test_AI_NumberOfOutputs
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_AI_NumberOfOutputs"
+      - run:
+          name: Run test_AI_PredictedCity
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_AI_PredictedCity"
+      - run:
+          name: Run test_AI_Preprocessing
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_AI_Preprocessing"
+      - run:
+          name: Run test_ButtonPanel
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_ButtonPanel"
+      - run:
+          name: Run test_IconsExist
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_IconsExist"
+      - run:
+          name: Run test_InformationDialog
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_InformationDialog"
+      - run:
+          name: Run test_ModelExist
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_ModelExist"
+      - run:
+          name: Run test_SelectMethod
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_SelectMethod"
+      - run:
+          name: Run test_sort_button
+          command: |
+            docker run --rm -v $(pwd):/usr/src/app -w /usr/src/app mgallai/vision_ai:latest \
+            /bin/bash -c ". venv/bin/activate && python -m unittest tests.test_sort_button"
+
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - test:
+      - build_image:
           filters:
             branches:
               only:
                 - main
-      - build_and_push:
+      - test:
           requires:
-            - test
+            - build_image
           filters:
             branches:
               only:
