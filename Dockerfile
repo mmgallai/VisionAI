@@ -51,7 +51,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the entire project directory contents into the container
 COPY . .
 
-# Set environment variables for Qt
+# Set environment variables for Qt to use offscreen platform
 ENV QT_QPA_PLATFORM offscreen
 ENV XDG_RUNTIME_DIR /tmp/runtime-root
 
