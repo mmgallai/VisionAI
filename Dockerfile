@@ -40,6 +40,14 @@ RUN apt-get update && apt-get install -y \
     libxtst6 \
     libxss1 \
     libxxf86vm1 \
+    libdbus-1-3 \
+    libxcb-render0 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcairo2 \
+    libgdk-pixbuf2.0-0 \
+    libpango-1.0-0 \
+    libgdk-pixbuf2.0-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container
