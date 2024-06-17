@@ -8,6 +8,8 @@ executors:
 jobs:
   test:
     executor: docker-executor
+    environment:
+      QT_QPA_PLATFORM: offscreen
     steps:
       - checkout
       - setup_remote_docker:
