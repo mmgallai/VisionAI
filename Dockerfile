@@ -50,13 +50,13 @@ ENV XDG_RUNTIME_DIR=/tmp/runtime-root
 RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
 
 # Copy the requirements file into the container
-COPY requirements.txt .
+COPY requirements.txt /usr/src/app/
 
 # Install any dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project directory contents into the container
-COPY . .
+COPY . /usr/src/app/
 
 # Set environment variables for Qt to use offscreen platform
 ENV QT_QPA_PLATFORM offscreen
