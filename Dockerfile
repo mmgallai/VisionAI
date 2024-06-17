@@ -4,11 +4,11 @@ FROM python:3.9-slim
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Update package repositories
-RUN apt-get update
+# Configure APT to skip the problematic Post-Invoke script
+RUN echo 'DPkg::Post-Invoke {"rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true";};' > /etc/apt/apt.conf.d/no-cache
 
-# Install necessary libraries for PyQt5 and OpenGL
-RUN apt-get install -y \
+# Update package repositories and install necessary libraries for PyQt5 and OpenGL
+RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libxkbcommon-x11-0 \
@@ -53,7 +53,8 @@ RUN apt-get install -y \
     libgdk-pixbuf2.0-dev \
     qtbase5-dev \
     qtbase5-dev-tools \
-    qt5-qmake
+    qt5-qmake \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables for Qt to use offscreen platform
 ENV QT_QPA_PLATFORM=offscreen
