@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Update package lists
-RUN apt-get update --fix-missing
+RUN apt-get update -y
 
 # Install necessary libraries for PyQt5 and OpenGL
 RUN apt-get install -y --no-install-recommends \
@@ -19,7 +19,7 @@ RUN apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container at /app
-COPY requirements.txt .
+COPY requirements.txt.
 
 # Install the dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
