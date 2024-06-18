@@ -2,7 +2,7 @@
 FROM python:3.9-slim
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /VisionAI
 
 # Update and install necessary libraries for PyQt5 and OpenGL in one RUN command
 RUN apt-get update && \
