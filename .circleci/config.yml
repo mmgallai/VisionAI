@@ -19,7 +19,9 @@ jobs:
       # Build the Docker image
       - run:
           name: Build Docker image
-          command: docker build -t mgallai/vision_ai:${CIRCLE_SHA1} .
+          #command: docker build -t mgallai/vision_ai:${CIRCLE_SHA1} .
+          command: docker build -t $DOCKER_USER/vision_ai:${CIRCLE_SHA1} .
+
 
       # Log in to Docker Hub using credentials stored in CircleCI environment variables
       - run:
@@ -29,7 +31,7 @@ jobs:
       # Push Docker image
       - run:
           name: Push Docker image
-          command: docker push mgallai/vision_ai:${CIRCLE_SHA1}
+          command: docker push $DOCKER_USER/vision_ai:${CIRCLE_SHA1}
 
 workflows:
   version: 2
