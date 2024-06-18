@@ -43,7 +43,6 @@
 #               only:
 #                 - main
 
-
 version: 2.1
 
 executors:
