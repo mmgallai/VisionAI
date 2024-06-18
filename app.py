@@ -7,7 +7,6 @@ if __name__ == "__main__":
     print("Starting application...")
     app = QApplication(sys.argv)
     
-    
     print("Showing initial folder selection dialog...")
     initial_folder_dialog = InitialFolderSelection()
     if initial_folder_dialog.exec_() == QDialog.Accepted:
