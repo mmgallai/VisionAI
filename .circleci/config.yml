@@ -1,3 +1,4 @@
+# CircleCI configuration
 version: 2.1
 
 executors:
@@ -14,7 +15,7 @@ jobs:
       - checkout
       - run:
           name: Build Docker image
-          command: docker build -t mgallai/vision_ai:$CIRCLE_SHA1.
+          command: docker build --no-cache -t mgallai/vision_ai:$CIRCLE_SHA1 .
       - run:
           name: Push Docker image
           command: |
