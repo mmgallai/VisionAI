@@ -14,7 +14,7 @@ ENV PIP_NO_PROGRESS_BAR=off
 RUN python -m pip install --upgrade pip==23.0.1
 
 # Install the dependencies specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --use-deprecated=legacy-resolver
 
 # Copy the rest of the application code
 COPY . .
