@@ -4,10 +4,12 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Update the apt package list and install necessary libraries for PyQt5 and OpenGL in one RUN command
-RUN echo 'DPkg::Post-Invoke {"/bin/true";};' > /etc/apt/apt.conf.d/no-cache-clean && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
+# Install aptitude
+RUN apt-get update && apt-get install -y aptitude
+
+# Update the apt package list and install necessary libraries for PyQt5 and OpenGL using aptitude
+RUN aptitude update && \
+    aptitude install -y --without-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libxkbcommon-x11-0 \
