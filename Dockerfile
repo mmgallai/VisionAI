@@ -11,7 +11,7 @@ COPY requirements.txt .
 ENV PIP_NO_PROGRESS_BAR=off
 
 # Upgrade pip to a stable version separately
-RUN python -m pip install --upgrade pip==23.0.1
+RUN python -m pip install --upgrade pip==24.0
 
 # Install the dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
