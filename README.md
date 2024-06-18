@@ -149,6 +149,9 @@ VisionAI/
 ```
 - app.py: The main entry point for the application.
 
+## Demo
+![VisionAI](https://i.makeagif.com/media/6-18-2024/MstD_W.gif)
+
 ## Burndown Chart
 ![Burndown Chart](https://i.ibb.co/9TLgm7g/Sprint-burndown.png)
 
