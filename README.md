@@ -28,6 +28,7 @@ VisionAI is a PyQt5-based desktop application for organizing image collections u
 - **Vision AI:** Automatically create albums for folders using Vision AI.
 - **Manual Classification:** Manually create albums for selected images.
 - **Web Demo:** View a web demo hosted on Hugging Face.
+- **Rename Folder:** Rename an album folder with confirmation.
 - **Delete Folder:** Delete an album folder with confirmation.
 - **Information Dialog:** View instructions and information about the application.
 
