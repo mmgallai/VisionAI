@@ -5,22 +5,31 @@ executors:
     docker:
       - image: docker:20.10.7
 
-
 jobs:
   build_and_push:
     executor: docker-executor
     steps:
+      # Set up Docker environment for building images
       - setup_remote_docker:
           version: 20.10.7
+
+      # Check out the code from the repository
       - checkout
+
+      # Build the Docker image
       - run:
           name: Build Docker image
-          command: docker build -t mgallai/vision_ai:v1 .
+          command: |
+            TAG="${CIRCLE_SHA1}"
+            docker build -t mgallai/vision_ai:${TAG} .
+      
+      # Log in to Docker Hub using credentials stored in CircleCI environment variables
       - run:
           name: Push Docker image
           command: |
+            TAG="${CIRCLE_SHA1}"
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push mgallai/vision_ai:v1
+            docker push mgallai/vision_ai:${TAG}
 
 workflows:
   version: 2
