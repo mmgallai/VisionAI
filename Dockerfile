@@ -7,9 +7,6 @@ WORKDIR /usr/src/app
 # Copy the requirements file into the container at /app
 COPY requirements.txt .
 
-# Upgrade pip to the latest version
-RUN pip install --upgrade pip
-
 # Disable the progress bar to avoid threading issues
 ENV PIP_NO_PROGRESS_BAR=off
 
