@@ -11,6 +11,7 @@ VisionAI is a PyQt5-based desktop application for organizing image collections u
 - [Testing](#testing)
 - [Datasets](#datasets)
 - [Project Structure](#project-structure)
+- [Demo](#demo)
 - [Burndown Chart](#burndown-chart)
 - [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
@@ -150,7 +151,7 @@ VisionAI/
 - app.py: The main entry point for the application.
 
 ## Demo
-![VisionAI](https://i.makeagif.com/media/6-18-2024/MstD_W.gif)
+![Demo](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHAydWU3MnE5dnZ4Njg4eXdzYnBkZDgwMzJnemw0Z3Z0azl1MmN0MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Y5rMvrTf8JABxYHAPh/giphy.gif)
 
 ## Burndown Chart
 ![Burndown Chart](https://i.ibb.co/9TLgm7g/Sprint-burndown.png)
@@ -177,5 +178,4 @@ This project is licensed under the MIT License.
 - This project uses [YOLOv8](https://github.com/ultralytics/ultralytics) to organize images.
 - Special thanks to user "[amaralibey](https://www.kaggle.com/amaralibey)" in kaggle for the datatset.
 - Special thanks to the contributors and the open-source community for their support.
-
 
