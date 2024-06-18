@@ -155,7 +155,10 @@ VisionAI/
 ![Demo](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZHAydWU3MnE5dnZ4Njg4eXdzYnBkZDgwMzJnemw0Z3Z0azl1MmN0MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Y5rMvrTf8JABxYHAPh/giphy.gif)
 
 ## Burndown Chart
-![Burndown Chart](https://i.ibb.co/9TLgm7g/Sprint-burndown.png)
+**Sprint 2:**
+![Burndown Chart 2](https://i.ibb.co/9TLgm7g/Sprint-burndown.png)
+**Sprint 3:**
+![Burndown Chart 3](https://i.ibb.co/gJ35qW9/Screenshot-2024-06-18-114417.png)
 
 ## Technologies Used
 - <img src="https://img.icons8.com/color/48/000000/python.png" alt="Python" width="48" height="48"> **Python**: The primary programming language used for this project.
