@@ -4,8 +4,11 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install necessary libraries for PyQt5 and OpenGL with --fix-missing flag
-RUN apt-get update --fix-missing && apt-get install -y \
+# Update package lists
+RUN apt-get update --fix-missing
+
+# Install necessary libraries for PyQt5 and OpenGL
+RUN apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libxkbcommon-x11-0 \
