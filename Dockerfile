@@ -4,11 +4,9 @@ FROM python:3.9-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Update package lists
-RUN apt-get update --fix-missing
-
-# Install necessary libraries for PyQt5 and OpenGL
-RUN apt-get install -y --no-install-recommends \
+# Install necessary libraries for PyQt5 and OpenGL in a single RUN command
+RUN apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
     libglib2.0-0 \
     libxkbcommon-x11-0 \
@@ -18,7 +16,7 @@ RUN apt-get install -y --no-install-recommends \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container at /app
+# Copy the requirements file first to leverage Docker cache
 COPY requirements.txt .
 
 # Install the dependencies specified in requirements.txt
