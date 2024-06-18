@@ -1,10 +1,11 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.9
 
 # Set the working directory in the container
-WORKDIR /VisionAI
+WORKDIR /app
 
-# Update and install necessary libraries for PyQt5 and OpenGL in one RUN command
+# Update the apt package list and install necessary libraries for PyQt5 and OpenGL in one RUN command
+# This ensures all packages are installed together, reducing the number of layers and keeping the image size smaller
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     libgl1-mesa-glx \
@@ -21,7 +22,7 @@ COPY requirements.txt .
 # Install the dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Copy the rest of the application code into the container
 COPY . .
 
 # Make port 80 available to the world outside this container
