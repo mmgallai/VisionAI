@@ -21,7 +21,9 @@ class TestAI_NumberOfOutputs(unittest.TestCase):
         self.select_method = SelectMethod(self.window)
     
     def test_AI_Method_NumberOfOutputs(self):
+        # Ensure the model path is correct and the file exists
         ai_instance = AI(self.window, self.window.initial_directory)
+        self.assertTrue(os.path.isfile(ai_instance.model_path), f"Model file does not exist: {ai_instance.model_path}")
         
         # Construct the path to the test image dynamically
         script_dir = os.path.dirname(__file__)
@@ -36,8 +38,8 @@ class TestAI_NumberOfOutputs(unittest.TestCase):
         # Print prediction for debugging
         print(f"Prediction: {prediction}")
 
-        # Verify the prediction has 5 elements
-        self.assertEqual(len(prediction), 6, "The prediction should have 5 elements") ## one is dtype=float32
+        # Verify the prediction length
+        self.assertEqual(len(prediction), 6, "The prediction should have 6 elements")  # Adjust if needed
     
     @classmethod
     def tearDownClass(cls):

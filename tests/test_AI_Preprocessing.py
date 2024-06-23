@@ -47,5 +47,9 @@ class TestAIPreprocessing(unittest.TestCase):
         # Check if preprocessing is done correctly
         np.testing.assert_array_almost_equal(expected_img_array, actual_img_array, decimal=5, err_msg="Preprocessing not done correctly")
 
+    @classmethod
+    def tearDownClass(cls):
+        del cls.ai
+
 if __name__ == '__main__':
     unittest.main()
